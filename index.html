@@ -156,7 +156,7 @@ button{cursor:pointer;border:none;background:none}
   function saveFlights(){ try { localStorage.setItem(storageKey, JSON.stringify({flights, activeFlightId, theme: currentTheme})); } catch(e) {} }
   function loadFlights(){ try { const raw = localStorage.getItem(storageKey); if(!raw) return false; const data = JSON.parse(raw); if(Array.isArray(data.flights)) flights = data.flights; if(data.activeFlightId) activeFlightId = data.activeFlightId; if(data.theme) { currentTheme = data.theme; root.setAttribute("data-theme", currentTheme); } return flights.length > 0; } catch(e) { return false; } }
   function num(v) { const n = parseInt(v, 10); return Number.isFinite(n) && n > 0 ? n : 0; }
-  function openPax() { const f = getActiveFlight(); if (!f) return; paxSub.textContent = `${f.info.numero || '--'} • ${f.info.destination || '--'}`; paxAdults.value = f.pax.adults || ""; paxChilds.value = f.pax.childs || ""; paxInfants.value = f.pax.infants || ""; secOA.value = f.pax.oa || ""; secOB.value = f.pax.ob || ""; secOC.value = f.pax.oc || ""; secBags.value = f.pax.bags || ""; secGB.value = f.pax.gb || ""; computePaxUI(); paxBackdrop.classList.add('open'); paxBackdrop.setAttribute('aria-hidden', 'false'); }
+  function openPax() { const f = getActiveFlight(); if (!f) return; paxSub.textContent = `${f.info.numero || '--'} • ${f.info.destination || '--'}`; paxAdults.value = f.pax.adults ?? ""; paxChilds.value = f.pax.childs ?? ""; paxInfants.value = f.pax.infants ?? ""; secOA.value = f.pax.oa ?? ""; secOB.value = f.pax.ob ?? ""; secOC.value = f.pax.oc ?? ""; secBags.value = f.pax.bags ?? ""; secGB.value = f.pax.gb ?? ""; computePaxUI(); paxBackdrop.classList.add('open'); paxBackdrop.setAttribute('aria-hidden', 'false'); }
   function closePax() { paxBackdrop.classList.remove('open'); paxBackdrop.setAttribute('aria-hidden', 'true'); }
   function computePaxUI() { const adults = num(paxAdults.value), childs = num(paxChilds.value), infants = num(paxInfants.value); const oa = num(secOA.value), ob = num(secOB.value), oc = num(secOC.value); const tob = adults + childs; paxTob.textContent = `${tob}+${infants}`; const sec = oa + ob + oc; tobSummary.classList.toggle('warn-box', sec > tob); }
   function savePax() { const f = getActiveFlight(); if (!f) return; f.pax = { adults: num(paxAdults.value), childs: num(paxChilds.value), infants: num(paxInfants.value), oa: num(secOA.value), ob: num(secOB.value), oc: num(secOC.value), bags: num(secBags.value), gb: num(secGB.value) }; saveFlights(); }
@@ -172,9 +172,10 @@ button{cursor:pointer;border:none;background:none}
   cancelConfirmBtn.addEventListener('click', () => confirmBackdrop.classList.remove('open'));
   acceptConfirmBtn.addEventListener('click', () => { confirmBackdrop.classList.remove('open'); resetAll(); });
   openPaxBtn.addEventListener('click', openPax);
-  [paxAdults, paxChilds, paxInfants, secOA, secOB, secOC, secBags, secGB].forEach(el => { el.addEventListener('input', () => { computePaxUI(); savePax(); }); el.addEventListener('focus', () => { if (el.value === "0") el.value = ""; }); el.addEventListener('blur', () => { if (el.value === "") el.value = "0"; }); });
-  paxBackdrop.addEventListener('click', e => { if (e.target === paxBackdrop) closePax(); });
-  window.addEventListener('keydown', e => { if (e.key === 'Escape') closePax(); });
+  openPaxBtn.addEventListener('touchstart', e => { e.preventDefault(); openPax(); }, { passive:false });
+  [paxAdults, paxChilds, paxInfants, secOA, secOB, secOC, secBags, secGB].forEach(el => { el.addEventListener('input', () => { computePaxUI(); savePax(); }); el.addEventListener('change', () => { computePaxUI(); savePax(); }); el.addEventListener('focus', () => { if (el.value === "0") el.value = ""; }); el.addEventListener('blur', () => { if (el.value === "") el.value = "0"; savePax(); }); }); window.addEventListener('beforeunload', saveFlights);
+  paxBackdrop.addEventListener('click', e => { if (e.target === paxBackdrop) { savePax(); closePax(); } });
+  window.addEventListener('keydown', e => { if (e.key === 'Escape') { savePax(); closePax(); } });
   if (!loadFlights()) addFlight(); else renderAll();
 })();
 </script>
