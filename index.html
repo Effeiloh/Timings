@@ -5,35 +5,187 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Timings rotation</title>
 <style>
-:root,[data-theme="light"]{--bg:#f7f6f2;--surface:#fbfbf9;--surface2:#f3f0ec;--border:#d4d1ca;--text:#28251d;--muted:#6f6d67;--primary:#01696f;--success:#437a22;--danger:#b94a48;--radius:.75rem;--radius2:1.15rem;--shadow:0 8px 24px rgba(0,0,0,.08);--font:system-ui,sans-serif}
-[data-theme="dark"]{--bg:#171614;--surface:#1c1b19;--surface2:#22211f;--border:#393836;--text:#e3e0d9;--muted:#a5a19b;--primary:#4f98a3;--success:#6daa45;--danger:#e06b68;--shadow:0 12px 32px rgba(0,0,0,.28)}
-*{box-sizing:border-box}body{margin:0;min-height:100dvh;font-family:var(--font);background:var(--bg);color:var(--text)}button,input,textarea{font:inherit;color:inherit}button{cursor:pointer;border:none;background:none}:focus-visible{outline:2px solid var(--primary);outline-offset:3px;border-radius:.35rem}.app{max-width:1400px;margin:0 auto;padding:1rem;display:grid;gap:1.25rem}.topbar{display:flex;justify-content:space-between;align-items:center;gap:1rem}.brand{display:flex;align-items:center;gap:.75rem}.logo{width:2.4rem;height:2.4rem;padding:.42rem;border-radius:.8rem;background:var(--surface);border:1px solid var(--border)}.brand h1{margin:0;font-size:1.28rem}.brand p{margin:0;color:var(--muted);font-size:.9rem}.theme-toggle{width:2.7rem;height:2.7rem;display:grid;place-items:center;border-radius:50%;background:var(--surface);border:1px solid var(--border)}.layout{display:grid;gap:1rem}.panel{background:var(--surface);border:1px solid var(--border);border-radius:1.2rem;box-shadow:var(--shadow)}.setup,.preview{padding:.75rem;display:grid;gap:.65rem}.top-actions{display:flex;gap:.35rem;flex-wrap:nowrap;align-items:center;justify-content:flex-start}.trash-btn{color:#d24b4b}.section-title{display:flex;justify-content:space-between;gap:.75rem;align-items:flex-start;flex-wrap:wrap}.muted{color:var(--muted)}.fields{display:grid;gap:.85rem}.button-row{display:flex;gap:.65rem;flex-wrap:wrap}.flight-actions{display:flex;justify-content:flex-start;align-items:center;gap:.45rem}.top-actions .btn{min-width:2.15rem;padding:.45rem .55rem;text-align:center}.btn{padding:.85rem 1rem;border-radius:.75rem;border:1px solid var(--border);background:var(--surface2);font-weight:600}.btn.primary{background:var(--primary);border-color:var(--primary);color:white}.btn.ghost{background:transparent}.flight-list,.flight-grid{display:grid;gap:.6rem}.flight-box{border:1px solid var(--border);border-radius:.9rem;background:var(--surface2);padding:.6rem;display:grid;gap:.45rem}.flight-head{display:flex;justify-content:space-between;gap:.35rem;align-items:center;flex-wrap:nowrap}.flight-title{font-weight:700;font-size:.88rem}.flight-meta{font-size:.74rem;color:var(--muted)}.small-cols{display:grid;gap:.45rem}.two-line{display:grid;grid-template-columns:1fr 1fr;gap:.45rem}.time-blocks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem}.top-pair{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;align-items:start}.pair-stack{display:grid;gap:.9rem}.timing-card{min-height:5.9rem;padding:.72rem;border-radius:var(--radius2);background:var(--primary);color:white;box-shadow:var(--shadow);display:grid;gap:.45rem;align-content:center}.timing-card.is-recorded{background:var(--success)}.timing-label{font-size:.82rem;font-weight:700}.time-adjust{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:.3rem}.mini-btn{width:1.75rem;height:1.75rem;border-radius:.65rem;background:rgba(255,255,255,.18);color:white;font-weight:700;font-size:.95rem;display:grid;place-items:center}.time-btn,.time-input{width:100%;padding:.55rem .65rem;border-radius:.75rem;background:rgba(255,255,255,.14);color:white;text-align:center;font-size:1rem;font-weight:700;font-variant-numeric:tabular-nums}.time-input{border:1px solid rgba(255,255,255,.28)}.time-input::-webkit-calendar-picker-indicator{filter:invert(1)}.flight-grid .timing-card{min-height:5rem;padding:.58rem}.footer{font-size:.88rem;color:var(--muted);text-align:center;padding-bottom:1rem}.tag{display:inline-flex;align-items:center;padding:.32rem .6rem;border-radius:9999px;background:#dfe9e8;color:var(--primary);font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em}.tabs{display:flex;gap:.35rem;flex-wrap:wrap}.tab-btn{padding:.45rem .7rem;border-radius:999px;border:1px solid var(--border);background:var(--surface2);font-weight:700;font-size:.82rem}.tab-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.38);display:none;align-items:center;justify-content:center;padding:1rem;z-index:50}.modal-backdrop.open{display:flex}.modal{width:min(760px,100%);background:var(--surface);border:1px solid var(--border);border-radius:1.25rem;box-shadow:var(--shadow);overflow:hidden}.modal-head{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1rem;border-bottom:1px solid var(--border)}.modal-body{padding:.75rem;display:grid;gap:.6rem;overflow:auto}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:.55rem}.grid2 .stack{min-width:0}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.3rem}.grid3 .stack{min-width:0}.stack{display:grid;gap:.35rem}.label{font-size:.78rem;font-weight:700}.input{width:100%;padding:.85rem .95rem;border-radius:.75rem;border:1px solid var(--border);background:var(--bg)}.summary{padding:.9rem 1rem;border-radius:1rem;border:1px solid var(--border);background:var(--surface2);display:grid;gap:.25rem}.summary strong{font-size:1.05rem}.warn{color:var(--danger);font-weight:700}.modal-foot{display:flex;justify-content:space-between;gap:.75rem;align-items:center;flex-wrap:wrap;padding:1rem;border-top:1px solid var(--border)}.xs{font-size:.86rem;color:var(--muted)}@media(min-width:960px){.layout{grid-template-columns:420px 1fr}.flight-list{grid-template-columns:1fr 1fr}.flight-grid{grid-template-columns:1fr 1fr}}@media(min-width:1220px){.flight-list{grid-template-columns:repeat(3,1fr)}.flight-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:520px){.app{padding:.75rem}.setup,.preview{padding:.85rem}.timing-card{min-height:5.5rem}.mini-btn{width:1.65rem;height:1.65rem}.grid2,.grid3{grid-template-columns:1fr}.tabs{overflow:auto;flex-wrap:nowrap}}
+:root,[data-theme="light"]{
+  --bg:#f7f6f2;--surface:#fbfbf9;--surface2:#f3f0ec;--border:#d4d1ca;--text:#28251d;
+  --muted:#6f6d67;--primary:#01696f;--success:#437a22;--danger:#b94a48;
+  --radius:.75rem;--radius2:1.15rem;--shadow:0 8px 24px rgba(0,0,0,.08);--font:system-ui,sans-serif
+}
+[data-theme="dark"]{
+  --bg:#171614;--surface:#1c1b19;--surface2:#22211f;--border:#393836;--text:#e3e0d9;
+  --muted:#a5a19b;--primary:#4f98a3;--success:#6daa45;--danger:#e06b68;--shadow:0 12px 32px rgba(0,0,0,.28)
+}
+*{box-sizing:border-box}
+body{margin:0;min-height:100dvh;font-family:var(--font);background:var(--bg);color:var(--text)}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer;border:none;background:none}
+:focus-visible{outline:2px solid var(--primary);outline-offset:3px;border-radius:.35rem}
+.app{max-width:1400px;margin:0 auto;padding:1rem;display:grid;gap:1.25rem}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:1rem}
+.brand{display:flex;align-items:center;gap:.75rem}
+.logo{width:2.4rem;height:2.4rem;padding:.42rem;border-radius:.8rem;background:var(--surface);border:1px solid var(--border)}
+.brand h1{margin:0;font-size:1.28rem}
+.theme-toggle{width:2.7rem;height:2.7rem;display:grid;place-items:center;border-radius:50%;background:var(--surface);border:1px solid var(--border)}
+.layout{display:grid;gap:1rem}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:1.2rem;box-shadow:var(--shadow)}
+.setup,.preview{padding:1rem;display:grid;gap:1rem}
+.section-title{display:flex;justify-content:space-between;gap:.75rem;align-items:flex-start;flex-wrap:wrap}
+.button-row{display:flex;gap:.65rem;flex-wrap:wrap}
+.top-actions{display:flex;gap:.35rem;flex-wrap:nowrap;align-items:center;justify-content:flex-end}
+.btn{padding:.85rem 1rem;border-radius:.75rem;border:1px solid var(--border);background:var(--surface2);font-weight:600}
+.btn.primary{background:var(--primary);border-color:var(--primary);color:white}
+.btn.ghost{background:transparent}
+.top-actions .btn{min-width:2.15rem;padding:.45rem .55rem;text-align:center}
+.trash-btn{color:#d24b4b}
+.tabs{display:flex;gap:.35rem;flex-wrap:wrap}
+.tab-btn{padding:.45rem .7rem;border-radius:999px;border:1px solid var(--border);background:var(--surface2);font-weight:700;font-size:.82rem}
+.tab-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.flight-list,.flight-grid{display:grid;gap:.6rem}
+.flight-box{border:1px solid var(--border);border-radius:.9rem;background:var(--surface2);padding:.6rem;display:grid;gap:.45rem}
+.flight-head{display:flex;justify-content:space-between;gap:.35rem;align-items:center;flex-wrap:nowrap}
+.flight-title{font-weight:700;font-size:.88rem}
+.flight-meta{font-size:.74rem;color:var(--muted)}
+.small-cols{display:grid;gap:.45rem}
+.two-line{display:grid;grid-template-columns:1fr 1fr;gap:.45rem}
+.time-blocks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem}
+.top-pair{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;align-items:start}
+.pair-stack{display:grid;gap:.9rem}
+.timing-card{
+  min-height:4.75rem;padding:.5rem;border-radius:var(--radius2);background:var(--primary);
+  color:white;box-shadow:var(--shadow);display:grid;gap:.25rem;align-content:center
+}
+.timing-card.is-recorded{background:var(--success)}
+.timing-label{font-size:.82rem;font-weight:700}
+.time-adjust{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:.3rem}
+.mini-btn{
+  width:1.45rem;height:1.45rem;border-radius:.5rem;background:rgba(255,255,255,.18);
+  color:white;font-weight:700;font-size:.8rem;display:grid;place-items:center
+}
+.time-btn,.time-input{
+  width:100%;padding:.36rem .45rem;border-radius:.6rem;background:rgba(255,255,255,.14);
+  color:white;text-align:center;font-size:.88rem;font-weight:700;font-variant-numeric:tabular-nums;touch-action:manipulation
+}
+.time-input{border:1px solid rgba(255,255,255,.28)}
+.time-input::-webkit-calendar-picker-indicator{filter:invert(1)}
+.flight-grid .timing-card{min-height:5rem}
+.footer{font-size:.88rem;color:var(--muted);text-align:center;padding-bottom:1rem}
+.tag{display:inline-flex;align-items:center;padding:.32rem .6rem;border-radius:9999px;background:#dfe9e8;color:var(--primary);font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.modal-backdrop{
+  position:fixed;inset:0;background:rgba(0,0,0,.38);display:none;align-items:center;justify-content:center;
+  padding:1rem;z-index:50
+}
+.modal-backdrop.open{display:flex}
+.modal{
+  width:min(360px,92vw);max-height:min(72vh,520px);background:var(--surface);border:1px solid var(--border);
+  border-radius:1rem;box-shadow:var(--shadow);overflow:hidden
+}
+.modal-body{padding:.75rem;display:grid;gap:.6rem;overflow:auto}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:.55rem}.grid2 .stack{min-width:0}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.45rem}.grid3 .stack{min-width:0}
+.stack{display:grid;gap:.35rem}
+.label{font-size:.78rem;font-weight:700}
+.input{
+  width:100%;padding:.62rem .6rem;border-radius:.65rem;border:1px solid var(--border);background:var(--bg);min-width:0
+}
+.summary{
+  padding:.75rem .8rem;border-radius:.1rem;border:1px solid var(--border);background:var(--surface2);display:grid;gap:.2rem
+}
+.summary strong{font-size:1.05rem}
+.warn{color:var(--danger);font-weight:700}
+.modal-foot{
+  display:flex;justify-content:center;gap:.55rem;align-items:center;flex-wrap:wrap;padding:.8rem;border-top:1px solid var(--border)
+}
+.xs{font-size:.86rem;color:var(--muted)}
+.confirm-backdrop{
+  position:fixed;inset:0;background:rgba(0,0,0,.38);display:none;align-items:center;justify-content:center;
+  z-index:60;padding:1rem
+}
+.confirm-backdrop.open{display:flex}
+.confirm-box{
+  width:min(420px,100%);background:var(--surface);border:1px solid var(--border);
+  border-radius:1rem;box-shadow:var(--shadow);padding:1rem;display:grid;gap:.9rem
+}
+.confirm-actions{display:flex;justify-content:flex-end;gap:.6rem}
+.pax-fab{
+  position:fixed;right:.85rem;bottom:.85rem;z-index:40;border-radius:999px;box-shadow:var(--shadow)
+}
+@media(min-width:960px){
+  .layout{grid-template-columns:420px 1fr}
+  .flight-list{grid-template-columns:1fr 1fr}
+  .flight-grid{grid-template-columns:1fr 1fr}
+}
+@media(min-width:1220px){
+  .flight-list{grid-template-columns:repeat(3,1fr)}
+  .flight-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:520px){
+  .app{padding:.65rem}
+  .setup,.preview{padding:.75rem}
+  .timing-card{min-height:4.8rem}
+  .mini-btn{width:1.55rem;height:1.55rem}
+  .grid2,.grid3{grid-template-columns:1fr}
+  .tabs{overflow:auto;flex-wrap:nowrap}
+  .modal{width:min(90vw,340px);max-height:66vh}
+  .pax-grid{gap:.35rem}
+  .pax-grid .label{font-size:.72rem}
+  .pax-grid .input{padding:.55rem .5rem}
+}
 </style>
 </head>
 <body>
 <div class="app">
   <header class="topbar">
     <div class="brand">
-      <svg class="logo" viewBox="0 0 64 64" fill="none"><rect x="8" y="8" width="48" height="48" rx="16" stroke="currentColor" stroke-width="4"></rect><path d="M32 18V32L41 38" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="32" cy="32" r="3" fill="currentColor"></circle></svg>
-      <div><h1>Timings rotation</h1></div>
+      <svg class="logo" viewBox="0 0 64 64" fill="none">
+        <rect x="8" y="8" width="48" height="48" rx="16" stroke="currentColor" stroke-width="4"></rect>
+        <path d="M32 18V32L41 38" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+        <circle cx="32" cy="32" r="3" fill="currentColor"></circle>
+      </svg>
+      <div>
+        <h1>Timings rotation</h1>
+      </div>
     </div>
-    <button class="theme-toggle" type="button" id="themeToggle" aria-label="Changer de thème"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+    <button class="theme-toggle" type="button" id="themeToggle" aria-label="Changer de thème">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
   </header>
+
   <main class="layout">
     <section class="panel setup">
-      <div class="section-title"><div><h2>Vols</h2></div></div>
-      <div class="button-row"><button class="btn primary" type="button" id="addFlightBtn">Ajouter un vol</button><button class="btn ghost" type="button" id="exportBtn">Exporter tout</button><button class="btn ghost" type="button" id="resetBtn">Réinitialiser</button></div>
+      <div class="top-actions">
+        <button class="btn primary" type="button" id="addFlightBtn" aria-label="Ajouter un vol">+</button>
+        <button class="btn ghost trash-btn" type="button" id="resetBtn" aria-label="Tout supprimer">🗑</button>
+      </div>
       <div id="tabsHost" class="tabs"></div>
       <div id="flightList" class="flight-list"></div>
     </section>
+
     <section class="panel preview">
-      <div class="section-title"><div><span class="tag">Actif</span><h2>Timings du vol</h2><p class="muted">SIBT/AIBT à gauche, SOBT/AOBT à droite.</p></div><button class="btn primary pax-fab" type="button" id="openPaxBtn">LID</button></div>
+      <div class="section-title">
+        <div>
+          <span class="tag">Actif</span>
+          <h2>Timings du vol</h2>
+        </div>
+        <button class="btn primary pax-fab" type="button" id="openPaxBtn">LID</button>
+      </div>
       <div id="previewArea" class="flight-grid"></div>
     </section>
   </main>
-  
 </div>
-<div class="confirm-backdrop" id="confirmBackdrop" aria-hidden="true"><div class="confirm-box"><div style="font-weight:700">Supprimer toutes les données ?</div><div class="xs">Cette action effacera tous les vols et leurs timings.</div><div class="confirm-actions"><button class="btn ghost" id="cancelConfirmBtn" type="button">Annuler</button><button class="btn primary" id="acceptConfirmBtn" type="button">Supprimer</button></div></div></div><div class="modal-backdrop" id="paxBackdrop" aria-hidden="true">
+
+<div class="confirm-backdrop" id="confirmBackdrop" aria-hidden="true">
+  <div class="confirm-box">
+    <div style="font-weight:700">Supprimer toutes les données ?</div>
+    <div class="xs">Cette action effacera tous les vols et leurs timings.</div>
+    <div class="confirm-actions">
+      <button class="btn ghost" id="cancelConfirmBtn" type="button">Annuler</button>
+      <button class="btn primary" id="acceptConfirmBtn" type="button">Supprimer</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="paxBackdrop" aria-hidden="true">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="paxTitle">
     <div class="modal-head">
       <div>
@@ -41,62 +193,391 @@
         <div class="xs" id="paxSub">Vol actif</div>
       </div>
     </div>
+
     <div class="modal-body">
       <div class="grid3 pax-grid">
         <div class="stack"><div class="label">Adults</div><input class="input" id="paxAdults" type="number" min="0" step="1"></div>
         <div class="stack"><div class="label">Childs</div><input class="input" id="paxChilds" type="number" min="0" step="1"></div>
         <div class="stack"><div class="label">Infants</div><input class="input" id="paxInfants" type="number" min="0" step="1"></div>
       </div>
-      <div class="summary"><div class="xs">TOB</div><strong id="paxTob">0+0</strong><div class="xs">Adultes + enfants, puis infants affichés à part.</div></div>
+
+      <div class="summary">
+        <div class="xs">TOB</div>
+        <strong id="paxTob">0+0</strong>
+        <div class="xs">Adultes + enfants, puis infants affichés à part.</div>
+      </div>
+
       <div class="grid3 pax-grid">
         <div class="stack"><div class="label">OA</div><input class="input" id="secOA" type="number" min="0" step="1"></div>
         <div class="stack"><div class="label">OB</div><input class="input" id="secOB" type="number" min="0" step="1"></div>
         <div class="stack"><div class="label">OC</div><input class="input" id="secOC" type="number" min="0" step="1"></div>
       </div>
-      <div class="grid3 pax-grid">
-        <div class="stack"><div class="label">BAGS</div><input class="input" id="secBags" type="number" min="0" step="1"></div>
-        <div class="stack"><div class="label">GB</div><input class="input" id="secGB" type="number" min="0" step="1"></div>
-        <div></div>
+
+      <div class="summary">
+        <div class="xs">Contrôle sections</div>
+        <strong id="secTotal">0 / 0</strong>
+        <div class="xs" id="secMsg">OA + OB + OC doit être égal à Adults + Childs.</div>
       </div>
-      <div class="summary"><div class="xs">Contrôle sections</div><strong id="secTotal">0 / 0</strong><div class="xs" id="secMsg">OA + OB + OC doit être égal à Adults + Childs.</div></div>
     </div>
-    <div class="modal-foot"><div class="xs">La bulle reste indépendante pour chaque vol et garde ses données à la fermeture.</div><button class="btn primary" type="button" id="savePaxBtn">Enregistrer</button></div>
+
+    <div class="modal-foot">
+      <div class="xs">La bulle reste indépendante pour chaque vol et garde ses données à la fermeture.</div>
+      <button class="btn primary" type="button" id="savePaxBtn">Enregistrer</button>
+    </div>
   </div>
 </div>
+
 <script>
 (() => {
-const root=document.documentElement, themeToggle=document.getElementById('themeToggle');
-let currentTheme=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'; root.setAttribute('data-theme',currentTheme);
-const tabsHost=document.getElementById('tabsHost'), flightList=document.getElementById('flightList'), previewArea=document.getElementById('previewArea');
-const addFlightBtn=document.getElementById('addFlightBtn'), exportBtn=document.getElementById('exportBtn'), resetBtn=document.getElementById('resetBtn'), openPaxBtn=document.getElementById('openPaxBtn');
-const paxBackdrop=document.getElementById('paxBackdrop'), closePaxBtn=document.getElementById('closePaxBtn'), savePaxBtn=document.getElementById('savePaxBtn');
-const paxAdults=document.getElementById('paxAdults'), paxChilds=document.getElementById('paxChilds'), paxInfants=document.getElementById('paxInfants'), paxTob=document.getElementById('paxTob');
-const secOA=document.getElementById('secOA'), secOB=document.getElementById('secOB'), secOC=document.getElementById('secOC'), secTotal=document.getElementById('secTotal'), secMsg=document.getElementById('secMsg'), paxSub=document.getElementById('paxSub');
-const baseLabels=['SIBT','AIBT','SOBT','AOBT','1er Débarqué','Dernier Débarqué','1er Embarqué','Dernier Embarqué','Arrivée Avitair','Départ Avitair','Arrivée Lift','Départ Lift','Remise LID','Fermeture Portes'];
-let flights=[]; let activeFlightId=null;
-const pad=n=>String(n).padStart(2,'0');
-const nowTime=()=>new Intl.DateTimeFormat('fr-FR',{hour:'2-digit',minute:'2-digit'}).format(new Date());
-const shift=(time,delta)=>{if(!time||!/\d{2}:\d{2}/.test(time)) return time||'--:--'; const [h,m]=time.split(':').map(Number); const t=((h*60+m+delta)%1440+1440)%1440; return `${pad(Math.floor(t/60))}:${pad(t%60)}`;};
-function makeFlight(){ return {id:crypto.randomUUID(),name:'Vol '+(flights.length+1),info:{immat:'',numero:'',type:'',destination:''},times:{SIBT:'',AIBT:'',SOBT:'',AOBT:''},others:Object.fromEntries(baseLabels.filter(x=>!['SIBT','AIBT','SOBT','AOBT'].includes(x)).map(x=>[x,''])), pax:{adults:0,childs:0,infants:0,oa:0,ob:0,oc:0}}; }
-function getActiveFlight(){ return flights.find(f=>f.id===activeFlightId) || flights[0] || null; }
-function updateSOBT(f){ if(f.times.SIBT) f.times.SOBT = shift(f.times.SIBT,25); }
-function openPax(){ const f=getActiveFlight(); if(!f) return; paxSub.textContent=f.name||'Vol actif'; paxAdults.value=f.pax.adults||0; paxChilds.value=f.pax.childs||0; paxInfants.value=f.pax.infants||0; secOA.value=f.pax.oa||0; secOB.value=f.pax.ob||0; secOC.value=f.pax.oc||0; computePaxUI(); paxBackdrop.classList.add('open'); paxBackdrop.setAttribute('aria-hidden','false'); }
-function closePax(){ paxBackdrop.classList.remove('open'); paxBackdrop.setAttribute('aria-hidden','true'); }
-function num(v){ const n=parseInt(v,10); return Number.isFinite(n)&&n>0?n:0; }
-function computePaxUI(){ const adults=num(paxAdults.value), childs=num(paxChilds.value), infants=num(paxInfants.value), oa=num(secOA.value), ob=num(secOB.value), oc=num(secOC.value); const tob=adults+childs; paxTob.textContent=`${tob}+${infants}`; const sec=oa+ob+oc; secTotal.textContent=`${sec} / ${tob}`; secMsg.textContent = sec===tob ? 'Sections conformes.' : 'OA + OB + OC doit être égal à Adults + Childs.'; secMsg.className = sec===tob ? 'xs' : 'xs warn'; }
-function savePax(){ const f=getActiveFlight(); if(!f) return; f.pax={adults:num(paxAdults.value),childs:num(paxChilds.value),infants:num(paxInfants.value),oa:num(secOA.value),ob:num(secOB.value),oc:num(secOC.value)}; computePaxUI(); closePax(); }
-function makeTimingCard(label,value,opts={}){ const isManual=label==='SIBT'; const isSOBT=label==='SOBT'; const card=document.createElement('article'); card.className=`timing-card${value?' is-recorded':''}${opts.small?' small':''}`; if(isManual){card.innerHTML=`<div class="timing-label">${label}</div><div class="time-adjust"><input class="time-input" type="time" value="${value||''}" aria-label="${label}"></div>`; const input=card.querySelector('input'); input.addEventListener('input',e=>opts.onChange(e.target.value)); input.addEventListener('dblclick',()=>opts.onChange('')); return card;} card.innerHTML=`<div class="timing-label">${label}</div><div class="time-adjust"><button class="mini-btn minus" type="button">−</button><button class="time-btn" type="button">${value||'--:--'}</button><button class="mini-btn plus" type="button">+</button></div>${isSOBT?'<div class="timing-help">SIBT + 25 min par défaut, modifiable.</div>':''}`; const minus=card.querySelector('.minus'), plus=card.querySelector('.plus'), btn=card.querySelector('.time-btn'); btn.addEventListener('click',()=>opts.onChange(nowTime())); btn.addEventListener('dblclick',()=>opts.onChange('')); minus.addEventListener('click',()=>{ if(value) opts.onChange(shift(value,-1)); }); plus.addEventListener('click',()=>{ if(value) opts.onChange(shift(value,1)); }); return card; }
-function renderTabs(){ tabsHost.innerHTML=''; flights.forEach((f,idx)=>{ const b=document.createElement('button'); b.className='tab-btn'+(f.id===activeFlightId?' active':''); b.type='button'; b.textContent=f.name||('Vol '+(idx+1)); b.onclick=()=>{ activeFlightId=f.id; renderAll(); }; tabsHost.appendChild(b); }); }
-function renderFlights(){ flightList.innerHTML=''; const f=getActiveFlight(); if(!f){ flightList.innerHTML='<div class="flight-box">Ajoute un vol pour commencer.</div>'; return; } const el=document.createElement('article'); el.className='flight-box'; el.innerHTML=`<div class="flight-head"><div><div class="flight-title">${f.name}</div><div class="flight-meta">${[f.info.numero].filter(Boolean).join(' • ') || 'Informations non renseignées'}</div></div><div class="button-row"><button class="btn ghost" type="button" data-remove="${f.id}">Supprimer</button></div></div><div class="small-cols"><div class="two-line"><input class="input" data-field="immat" data-id="${f.id}" placeholder="Immat" value="${f.info.immat}" maxlength="6"><input class="input" data-field="numero" data-id="${f.id}" placeholder="N°Vol" value="${f.info.numero}"></div><div class="two-line"><input class="input" data-field="type" data-id="${f.id}" placeholder="Type avion" value="${f.info.type}"><input class="input" data-field="destination" data-id="${f.id}" placeholder="Destination" value="${f.info.destination}" maxlength="3"></div></div>`; flightList.appendChild(el); document.querySelectorAll('[data-field]').forEach(inp=>inp.addEventListener('input',e=>{ const fl=flights.find(x=>x.id===e.target.dataset.id); fl.info[e.target.dataset.field]=e.target.value; })); document.querySelectorAll('[data-remove]').forEach(btn=>btn.addEventListener('click',e=>{ flights=flights.filter(x=>x.id!==e.target.dataset.remove); if(activeFlightId===e.target.dataset.remove) activeFlightId=flights[0]?.id||null; renderAll(); })); }
-function renderPreview(){ previewArea.innerHTML=''; const f=getActiveFlight(); if(!f){ previewArea.innerHTML='<div class="panel" style="padding:1rem">Ajoute un vol pour voir la zone timings.</div>'; return; } updateSOBT(f); const box=document.createElement('article'); box.className='flight-box'; box.innerHTML=`<div class="flight-head"><div><div class="flight-title">${f.name}</div><div class="flight-meta">${[f.info.immat,f.info.numero,f.info.type,f.info.destination].filter(Boolean).join(' • ') || 'Renseigne les champs à gauche'}</div></div></div>`; const top=document.createElement('div'); top.className='top-pair'; const left=document.createElement('div'); left.className='pair-stack'; const right=document.createElement('div'); right.className='pair-stack'; left.appendChild(makeTimingCard('SIBT',f.times.SIBT,{small:true,onChange:v=>{f.times.SIBT=v; updateSOBT(f); renderAll();}})); left.appendChild(makeTimingCard('AIBT',f.times.AIBT,{small:true,onChange:v=>{f.times.AIBT=v; renderAll();}})); right.appendChild(makeTimingCard('SOBT',f.times.SOBT,{small:true,onChange:v=>{f.times.SOBT=v; renderAll();}})); right.appendChild(makeTimingCard('AOBT',f.times.AOBT,{small:true,onChange:v=>{f.times.AOBT=v; renderAll();}})); top.append(left,right); box.appendChild(top); const grid=document.createElement('div'); grid.className='time-blocks'; baseLabels.filter(x=>!['SIBT','AIBT','SOBT','AOBT'].includes(x)).forEach(label=>grid.appendChild(makeTimingCard(label,f.others[label],{onChange:v=>{f.others[label]=v; renderAll();}}))); box.appendChild(grid); previewArea.appendChild(box); }
-function renderAll(){ renderTabs(); renderFlights(); renderPreview(); }
-function addFlight(){ const f=makeFlight(); flights.push(f); activeFlightId=f.id; renderAll(); }
-function exportAll(){ const rows=[['Vol','Immat','N°Vol','Type avion','Destination','Timings','PAX']]; flights.forEach((f,i)=>rows.push([String(i+1),f.info.immat,f.info.numero,f.info.type,f.info.destination,JSON.stringify({times:f.times,others:f.others}),JSON.stringify(f.pax)])); const csv=rows.map(r=>r.map(c=>`"${String(c??'').replace(/"/g,'""')}"`).join(';')).join('
-'); const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='vols-timings.csv'; a.click(); URL.revokeObjectURL(a.href); }
-function resetAll(){ flights=[]; activeFlightId=null; renderAll(); }
-themeToggle.addEventListener('click',()=>{ currentTheme=currentTheme==='dark'?'light':'dark'; root.setAttribute('data-theme',currentTheme); });
-addFlightBtn.addEventListener('click',addFlight); exportBtn.addEventListener('click',exportAll); resetBtn.addEventListener('click',resetAll); openPaxBtn.addEventListener('click',openPax); closePaxBtn.addEventListener('click',closePax); savePaxBtn.addEventListener('click',savePax); [paxAdults,paxChilds,paxInfants,secOA,secOB,secOC].forEach(el=>el.addEventListener('input',computePaxUI)); paxBackdrop.addEventListener('click',e=>{ if(e.target===paxBackdrop) closePax(); }); window.addEventListener('keydown',e=>{ if(e.key==='Escape') closePax(); }); addFlight();
+  const root = document.documentElement;
+  const themeToggle = document.getElementById('themeToggle');
+  let currentTheme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  root.setAttribute('data-theme', currentTheme);
+
+  const tabsHost = document.getElementById('tabsHost');
+  const flightList = document.getElementById('flightList');
+  const previewArea = document.getElementById('previewArea');
+  const addFlightBtn = document.getElementById('addFlightBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const openPaxBtn = document.getElementById('openPaxBtn');
+
+  const confirmBackdrop = document.getElementById('confirmBackdrop');
+  const cancelConfirmBtn = document.getElementById('cancelConfirmBtn');
+  const acceptConfirmBtn = document.getElementById('acceptConfirmBtn');
+
+  const paxBackdrop = document.getElementById('paxBackdrop');
+  const savePaxBtn = document.getElementById('savePaxBtn');
+  const paxAdults = document.getElementById('paxAdults');
+  const paxChilds = document.getElementById('paxChilds');
+  const paxInfants = document.getElementById('paxInfants');
+  const paxTob = document.getElementById('paxTob');
+  const secOA = document.getElementById('secOA');
+  const secOB = document.getElementById('secOB');
+  const secOC = document.getElementById('secOC');
+  const secTotal = document.getElementById('secTotal');
+  const secMsg = document.getElementById('secMsg');
+  const paxSub = document.getElementById('paxSub');
+
+  const baseLabels = [
+    'SIBT','AIBT','SOBT','AOBT','1er Débarqué','Dernier Débarqué',
+    '1er Embarqué','Dernier Embarqué','Arrivée Avitair','Départ Avitair',
+    'Arrivée Lift','Départ Lift','Remise LID','Fermeture Portes'
+  ];
+
+  let flights = [];
+  let activeFlightId = null;
+
+  const pad = n => String(n).padStart(2, '0');
+  const nowTime = () => new Intl.DateTimeFormat('fr-FR', { hour: '2-digit', minute: '2-digit' }).format(new Date());
+  const shift = (time, delta) => {
+    if (!time || !/\d{2}:\d{2}/.test(time)) return time || '--:--';
+    const [h, m] = time.split(':').map(Number);
+    const t = ((h * 60 + m + delta) % 1440 + 1440) % 1440;
+    return `${pad(Math.floor(t / 60))}:${pad(t % 60)}`;
+  };
+
+  function makeFlight() {
+    return {
+      id: crypto.randomUUID(),
+      name: 'Vol ' + (flights.length + 1),
+      info: { immat: '', numero: '', type: '', destination: '' },
+      times: { SIBT: '', AIBT: '', SOBT: '', AOBT: '' },
+      others: Object.fromEntries(baseLabels.filter(x => !['SIBT','AIBT','SOBT','AOBT'].includes(x)).map(x => [x, ''])),
+      pax: { adults: 0, childs: 0, infants: 0, oa: 0, ob: 0, oc: 0 }
+    };
+  }
+
+  function getActiveFlight() {
+    return flights.find(f => f.id === activeFlightId) || flights[0] || null;
+  }
+
+  function updateSOBT(f) {
+    if (f.times.SIBT) f.times.SOBT = shift(f.times.SIBT, 25);
+  }
+
+  function openPax() {
+    const f = getActiveFlight();
+    if (!f) return;
+    paxSub.textContent = `${f.info.numero || '--'} • ${f.info.destination || '--'}`;
+    paxAdults.value = f.pax.adults || 0;
+    paxChilds.value = f.pax.childs || 0;
+    paxInfants.value = f.pax.infants || 0;
+    secOA.value = f.pax.oa || 0;
+    secOB.value = f.pax.ob || 0;
+    secOC.value = f.pax.oc || 0;
+    computePaxUI();
+    paxBackdrop.classList.add('open');
+    paxBackdrop.setAttribute('aria-hidden', 'false');
+  }
+
+  function closePax() {
+    paxBackdrop.classList.remove('open');
+    paxBackdrop.setAttribute('aria-hidden', 'true');
+  }
+
+  function num(v) {
+    const n = parseInt(v, 10);
+    return Number.isFinite(n) && n > 0 ? n : 0;
+  }
+
+  function computePaxUI() {
+    const adults = num(paxAdults.value), childs = num(paxChilds.value), infants = num(paxInfants.value);
+    const oa = num(secOA.value), ob = num(secOB.value), oc = num(secOC.value);
+    const tob = adults + childs;
+    paxTob.textContent = `${tob}+${infants}`;
+    const sec = oa + ob + oc;
+    secTotal.textContent = `${sec} / ${tob}`;
+    secMsg.textContent = sec === tob ? 'Sections conformes.' : 'OA + OB + OC doit être égal à Adults + Childs.';
+    secMsg.className = sec === tob ? 'xs' : 'xs warn';
+  }
+
+  function savePax() {
+    const f = getActiveFlight();
+    if (!f) return;
+    f.pax = {
+      adults: num(paxAdults.value),
+      childs: num(paxChilds.value),
+      infants: num(paxInfants.value),
+      oa: num(secOA.value),
+      ob: num(secOB.value),
+      oc: num(secOC.value)
+    };
+    computePaxUI();
+    closePax();
+  }
+
+  function makeTimingCard(label, value, opts = {}) {
+    const isManual = label === 'SIBT';
+    const card = document.createElement('article');
+    card.className = `timing-card${value ? ' is-recorded' : ''}${opts.small ? ' small' : ''}`;
+
+    if (isManual) {
+      card.innerHTML = `<div class="timing-label">${label}</div><div class="time-adjust"><input class="time-input" type="time" value="${value || ''}" aria-label="${label}"></div>`;
+      const input = card.querySelector('input');
+      input.addEventListener('input', e => opts.onChange(e.target.value));
+      input.addEventListener('dblclick', () => opts.onChange(''));
+      return card;
+    }
+
+    const plusMinus = label === 'SOBT'
+      ? `<button class="mini-btn plus" type="button">+</button><button class="time-btn" type="button">${value || '--:--'}</button><button class="mini-btn minus" type="button">−</button>`
+      : `<button class="mini-btn minus" type="button">−</button><button class="time-btn" type="button">${value || '--:--'}</button><button class="mini-btn plus" type="button">+</button>`;
+
+    card.innerHTML = `<div class="timing-label">${label}</div><div class="time-adjust">${plusMinus}</div>`;
+
+    const minus = card.querySelector('.minus');
+    const plus = card.querySelector('.plus');
+    const btn = card.querySelector('.time-btn');
+
+    const apply = v => { opts.onChange(v); };
+    btn.addEventListener('click', () => apply(nowTime()));
+    if (label !== 'SIBT' && label !== 'SOBT') btn.addEventListener('dblclick', () => apply(''));
+    if (minus) {
+      minus.addEventListener('click', () => { if (value) apply(shift(value, -1)); });
+      minus.addEventListener('touchstart', e => { e.preventDefault(); if (value) apply(shift(value, -1)); }, { passive:false });
+    }
+    if (plus) {
+      plus.addEventListener('click', () => { if (value) apply(shift(value, 1)); });
+      plus.addEventListener('touchstart', e => { e.preventDefault(); if (value) apply(shift(value, 1)); }, { passive:false });
+    }
+    return card;
+  }
+
+  function renderTabs() {
+    tabsHost.innerHTML = '';
+    flights.forEach(f => {
+      const b = document.createElement('button');
+      b.className = 'tab-btn' + (f.id === activeFlightId ? ' active' : '');
+      b.type = 'button';
+      b.textContent = `${f.info.numero || '--'}${f.info.destination ? ' • ' + f.info.destination : ''}`;
+      b.onclick = () => { activeFlightId = f.id; renderAll(); };
+      tabsHost.appendChild(b);
+    });
+  }
+
+  function renderFlights() {
+    flightList.innerHTML = '';
+    const f = getActiveFlight();
+    if (!f) {
+      flightList.innerHTML = '<div class="flight-box">Ajoute un vol pour commencer.</div>';
+      return;
+    }
+
+    const el = document.createElement('article');
+    el.className = 'flight-box';
+    el.innerHTML = `
+      <div class="flight-head">
+        <div>
+          <div class="flight-title">${f.info.numero || '--'} ${f.info.destination || '--'}</div>
+        </div>
+        <div class="button-row">
+          <button class="btn ghost" type="button" data-remove="${f.id}">×</button>
+        </div>
+      </div>
+      <div class="small-cols">
+        <div class="two-line">
+          <input class="input" data-field="immat" data-id="${f.id}" placeholder="Immat" value="${f.info.immat}" maxlength="6">
+          <input class="input" data-field="numero" data-id="${f.id}" placeholder="N°Vol" value="${f.info.numero}">
+        </div>
+        <div class="two-line">
+          <select class="input" data-field="type" data-id="${f.id}">
+            <option value="">Type avion</option>
+            <option value="B738" ${f.info.type==='B738'?'selected':''}>B738</option>
+            <option value="B38M" ${f.info.type==='B38M'?'selected':''}>B38M</option>
+            <option value="A20" ${f.info.type==='A20'?'selected':''}>A20</option>
+          </select>
+          <input class="input" data-field="destination" data-id="${f.id}" placeholder="Destination" value="${f.info.destination}" maxlength="3">
+        </div>
+      </div>
+    `;
+    flightList.appendChild(el);
+
+    document.querySelectorAll('[data-field]').forEach(inp => {
+      inp.addEventListener('input', e => {
+        const fl = flights.find(x => x.id === e.target.dataset.id);
+        const field = e.target.dataset.field;
+        if (!fl) return;
+        if (field === 'destination') {
+          e.target.value = e.target.value.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 3);
+          fl.info.destination = e.target.value;
+        } else if (field === 'immat') {
+          e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
+          fl.info.immat = e.target.value;
+        } else {
+          fl.info[field] = e.target.value;
+        }
+        renderTabs();
+      });
+    });
+
+    document.querySelectorAll('[data-remove]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        flights = flights.filter(x => x.id !== e.target.dataset.remove);
+        if (activeFlightId === e.target.dataset.remove) activeFlightId = flights[0]?.id || null;
+        renderAll();
+      });
+    });
+  }
+
+  function renderPreview() {
+    previewArea.innerHTML = '';
+    const f = getActiveFlight();
+    if (!f) {
+      previewArea.innerHTML = '<div class="panel" style="padding:1rem">Ajoute un vol pour voir la zone timings.</div>';
+      return;
+    }
+
+    const box = document.createElement('article');
+    box.className = 'flight-box';
+    box.innerHTML = `
+      <div class="flight-head">
+        <div>
+          <div class="flight-title">${f.info.numero || '--'} ${f.info.destination || '--'}</div>
+        </div>
+      </div>
+    `;
+
+    const top = document.createElement('div');
+    top.className = 'top-pair';
+
+    const left = document.createElement('div');
+    left.className = 'pair-stack';
+
+    const right = document.createElement('div');
+    right.className = 'pair-stack';
+
+    left.appendChild(makeTimingCard('SIBT', f.times.SIBT, {
+      small: true,
+      onChange: v => {
+        f.times.SIBT = v;
+        updateSOBT(f);
+        renderPreview();
+      }
+    }));
+
+    left.appendChild(makeTimingCard('AIBT', f.times.AIBT, {
+      small: true,
+      onChange: v => {
+        f.times.AIBT = v;
+        renderPreview();
+      }
+    }));
+
+    right.appendChild(makeTimingCard('SOBT', f.times.SOBT, {
+      small: true,
+      onChange: v => {
+        f.times.SOBT = v;
+        renderPreview();
+      }
+    }));
+
+    right.appendChild(makeTimingCard('AOBT', f.times.AOBT, {
+      small: true,
+      onChange: v => {
+        f.times.AOBT = v;
+        renderPreview();
+      }
+    }));
+
+    top.append(left, right);
+    box.appendChild(top);
+
+    const grid = document.createElement('div');
+    grid.className = 'time-blocks';
+
+    baseLabels.filter(x => !['SIBT','AIBT','SOBT','AOBT'].includes(x)).forEach(label => {
+      grid.appendChild(makeTimingCard(label, f.others[label], {
+        onChange: v => {
+          f.others[label] = v;
+          renderPreview();
+        }
+      }));
+    });
+
+    box.appendChild(grid);
+    previewArea.appendChild(box);
+  }
+
+  function renderAll() {
+    renderTabs();
+    renderFlights();
+    renderPreview();
+  }
+
+  function addFlight() {
+    const f = makeFlight();
+    flights.push(f);
+    activeFlightId = f.id;
+    renderAll();
+  }
+
+  function resetAll() {
+    flights = [];
+    activeFlightId = null;
+    renderAll();
+  }
+
+  themeToggle.addEventListener('click', () => {
+    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', currentTheme);
+  });
+
+  addFlightBtn.addEventListener('click', addFlight);
+  resetBtn.addEventListener('click', () => confirmBackdrop.classList.add('open'));
+  cancelConfirmBtn.addEventListener('click', () => confirmBackdrop.classList.remove('open'));
+  acceptConfirmBtn.addEventListener('click', () => {
+    confirmBackdrop.classList.remove('open');
+    resetAll();
+  });
+
+  openPaxBtn.addEventListener('click', openPax);
+  savePaxBtn.addEventListener('click', savePax);
+  [paxAdults, paxChilds, paxInfants, secOA, secOB, secOC].forEach(el => el.addEventListener('input', computePaxUI));
+  paxBackdrop.addEventListener('click', e => { if (e.target === paxBackdrop) closePax(); });
+  window.addEventListener('keydown', e => { if (e.key === 'Escape') closePax(); });
+
+  addFlight();
 })();
 </script>
 </body>
-</html> 
+</html>
