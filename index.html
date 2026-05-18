@@ -30,38 +30,39 @@ button{cursor:pointer;border:none;background:none}
 .setup,.preview{padding:1rem;display:grid;gap:1rem}
 .section-title{display:flex;justify-content:space-between;gap:.75rem;align-items:flex-start;flex-wrap:wrap}
 .button-row{display:flex;gap:.65rem;flex-wrap:wrap}
-.top-actions{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+.top-actions{display:flex;gap:.35rem;flex-wrap:nowrap;align-items:center;justify-content:flex-end}
 .btn{padding:.85rem 1rem;border-radius:.75rem;border:1px solid var(--border);background:var(--surface2);font-weight:600}
 .btn.primary{background:var(--primary);border-color:var(--primary);color:white}
 .btn.ghost{background:transparent}
-.top-actions .btn{min-width:2.5rem;padding:.65rem .75rem;text-align:center}
+.top-actions .btn{min-width:2.15rem;padding:.45rem .55rem;text-align:center}
+.trash-btn{color:#d24b4b}
 .tabs{display:flex;gap:.35rem;flex-wrap:wrap}
 .tab-btn{padding:.45rem .7rem;border-radius:999px;border:1px solid var(--border);background:var(--surface2);font-weight:700;font-size:.82rem}
 .tab-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
-.flight-list,.flight-grid{display:grid;gap:.8rem}
-.flight-box{border:1px solid var(--border);border-radius:1rem;background:var(--surface2);padding:.75rem;display:grid;gap:.65rem}
-.flight-head{display:flex;justify-content:space-between;gap:.55rem;align-items:center;flex-wrap:wrap}
-.flight-title{font-weight:700;font-size:.92rem}
-.flight-meta{font-size:.78rem;color:var(--muted)}
-.small-cols{display:grid;gap:.55rem}
-.two-line{display:grid;grid-template-columns:1fr 1fr;gap:.55rem}
-.time-blocks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem}
+.flight-list,.flight-grid{display:grid;gap:.6rem}
+.flight-box{border:1px solid var(--border);border-radius:.9rem;background:var(--surface2);padding:.6rem;display:grid;gap:.45rem}
+.flight-head{display:flex;justify-content:space-between;gap:.35rem;align-items:center;flex-wrap:nowrap}
+.flight-title{font-weight:700;font-size:.88rem}
+.flight-meta{font-size:.74rem;color:var(--muted)}
+.small-cols{display:grid;gap:.45rem}
+.two-line{display:grid;grid-template-columns:1fr 1fr;gap:.45rem}
+.time-blocks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem}
 .top-pair{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;align-items:start}
 .pair-stack{display:grid;gap:.9rem}
 .timing-card{
-  min-height:5rem;padding:.58rem;border-radius:var(--radius2);background:var(--primary);
-  color:white;box-shadow:var(--shadow);display:grid;gap:.3rem;align-content:center
+  min-height:4.75rem;padding:.5rem;border-radius:var(--radius2);background:var(--primary);
+  color:white;box-shadow:var(--shadow);display:grid;gap:.25rem;align-content:center
 }
 .timing-card.is-recorded{background:var(--success)}
-.timing-label{font-size:.86rem;font-weight:700}
+.timing-label{font-size:.82rem;font-weight:700}
 .time-adjust{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:.3rem}
 .mini-btn{
-  width:1.55rem;height:1.55rem;border-radius:.55rem;background:rgba(255,255,255,.18);
-  color:white;font-weight:700;font-size:.85rem;display:grid;place-items:center
+  width:1.45rem;height:1.45rem;border-radius:.5rem;background:rgba(255,255,255,.18);
+  color:white;font-weight:700;font-size:.8rem;display:grid;place-items:center
 }
 .time-btn,.time-input{
-  width:100%;padding:.42rem .5rem;border-radius:.65rem;background:rgba(255,255,255,.14);
-  color:white;text-align:center;font-size:.92rem;font-weight:700;font-variant-numeric:tabular-nums;touch-action:manipulation
+  width:100%;padding:.36rem .45rem;border-radius:.6rem;background:rgba(255,255,255,.14);
+  color:white;text-align:center;font-size:.88rem;font-weight:700;font-variant-numeric:tabular-nums;touch-action:manipulation
 }
 .time-input{border:1px solid rgba(255,255,255,.28)}
 .time-input::-webkit-calendar-picker-indicator{filter:invert(1)}
@@ -77,21 +78,21 @@ button{cursor:pointer;border:none;background:none}
   width:min(360px,92vw);max-height:min(72vh,520px);background:var(--surface);border:1px solid var(--border);
   border-radius:1rem;box-shadow:var(--shadow);overflow:hidden
 }
-.modal-body{padding:.8rem;display:grid;gap:.75rem;overflow:auto}
+.modal-body{padding:.75rem;display:grid;gap:.6rem;overflow:auto}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:.55rem}.grid2 .stack{min-width:0}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.55rem}.grid3 .stack{min-width:0}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.45rem}.grid3 .stack{min-width:0}
 .stack{display:grid;gap:.35rem}
-.label{font-size:.88rem;font-weight:700}
+.label{font-size:.78rem;font-weight:700}
 .input{
-  width:100%;padding:.7rem .75rem;border-radius:.7rem;border:1px solid var(--border);background:var(--bg)
+  width:100%;padding:.62rem .6rem;border-radius:.65rem;border:1px solid var(--border);background:var(--bg);min-width:0
 }
 .summary{
-  padding:.9rem 1rem;border-radius:.1rem;border:1px solid var(--border);background:var(--surface2);display:grid;gap:.25rem
+  padding:.75rem .8rem;border-radius:.1rem;border:1px solid var(--border);background:var(--surface2);display:grid;gap:.2rem
 }
 .summary strong{font-size:1.05rem}
 .warn{color:var(--danger);font-weight:700}
 .modal-foot{
-  display:flex;justify-content:space-between;gap:.55rem;align-items:center;flex-wrap:wrap;padding:.8rem;border-top:1px solid var(--border)
+  display:flex;justify-content:center;gap:.55rem;align-items:center;flex-wrap:wrap;padding:.8rem;border-top:1px solid var(--border)
 }
 .xs{font-size:.86rem;color:var(--muted)}
 .confirm-backdrop{
@@ -123,7 +124,10 @@ button{cursor:pointer;border:none;background:none}
   .mini-btn{width:1.55rem;height:1.55rem}
   .grid2,.grid3{grid-template-columns:1fr}
   .tabs{overflow:auto;flex-wrap:nowrap}
-  .modal{width:min(88vw,330px);max-height:66vh}
+  .modal{width:min(90vw,340px);max-height:66vh}
+  .pax-grid{gap:.35rem}
+  .pax-grid .label{font-size:.72rem}
+  .pax-grid .input{padding:.55rem .5rem}
 }
 </style>
 </head>
@@ -149,14 +153,9 @@ button{cursor:pointer;border:none;background:none}
 
   <main class="layout">
     <section class="panel setup">
-      <div class="section-title">
-        <div>
-          <h2>Vols</h2>
-        </div>
-      </div>
       <div class="top-actions">
         <button class="btn primary" type="button" id="addFlightBtn" aria-label="Ajouter un vol">+</button>
-        <button class="btn ghost" type="button" id="resetBtn" aria-label="Tout supprimer">🗑</button>
+        <button class="btn ghost trash-btn" type="button" id="resetBtn" aria-label="Tout supprimer">🗑</button>
       </div>
       <div id="tabsHost" class="tabs"></div>
       <div id="flightList" class="flight-list"></div>
@@ -168,7 +167,7 @@ button{cursor:pointer;border:none;background:none}
           <span class="tag">Actif</span>
           <h2>Timings du vol</h2>
         </div>
-        <button class="btn primary pax-fab" type="button" id="openPaxBtn">Infos PAX</button>
+        <button class="btn primary pax-fab" type="button" id="openPaxBtn">LID</button>
       </div>
       <div id="previewArea" class="flight-grid"></div>
     </section>
@@ -190,14 +189,13 @@ button{cursor:pointer;border:none;background:none}
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="paxTitle">
     <div class="modal-head">
       <div>
-        <h3 id="paxTitle" style="margin:0">Infos PAX</h3>
+        <h3 id="paxTitle" style="margin:0">LID</h3>
         <div class="xs" id="paxSub">Vol actif</div>
       </div>
-      <button class="btn ghost" type="button" id="closePaxBtn">Fermer</button>
     </div>
 
     <div class="modal-body">
-      <div class="grid3">
+      <div class="grid3 pax-grid">
         <div class="stack"><div class="label">Adults</div><input class="input" id="paxAdults" type="number" min="0" step="1"></div>
         <div class="stack"><div class="label">Childs</div><input class="input" id="paxChilds" type="number" min="0" step="1"></div>
         <div class="stack"><div class="label">Infants</div><input class="input" id="paxInfants" type="number" min="0" step="1"></div>
@@ -209,7 +207,7 @@ button{cursor:pointer;border:none;background:none}
         <div class="xs">Adultes + enfants, puis infants affichés à part.</div>
       </div>
 
-      <div class="grid3">
+      <div class="grid3 pax-grid">
         <div class="stack"><div class="label">OA</div><input class="input" id="secOA" type="number" min="0" step="1"></div>
         <div class="stack"><div class="label">OB</div><input class="input" id="secOB" type="number" min="0" step="1"></div>
         <div class="stack"><div class="label">OC</div><input class="input" id="secOC" type="number" min="0" step="1"></div>
@@ -248,7 +246,6 @@ button{cursor:pointer;border:none;background:none}
   const acceptConfirmBtn = document.getElementById('acceptConfirmBtn');
 
   const paxBackdrop = document.getElementById('paxBackdrop');
-  const closePaxBtn = document.getElementById('closePaxBtn');
   const savePaxBtn = document.getElementById('savePaxBtn');
   const paxAdults = document.getElementById('paxAdults');
   const paxChilds = document.getElementById('paxChilds');
@@ -374,7 +371,7 @@ button{cursor:pointer;border:none;background:none}
 
     const apply = v => { opts.onChange(v); };
     btn.addEventListener('click', () => apply(nowTime()));
-    btn.addEventListener('dblclick', () => apply(''));
+    if (label !== 'SIBT' && label !== 'SOBT') btn.addEventListener('dblclick', () => apply(''));
     if (minus) {
       minus.addEventListener('click', () => { if (value) apply(shift(value, -1)); });
       minus.addEventListener('touchstart', e => { e.preventDefault(); if (value) apply(shift(value, -1)); }, { passive:false });
@@ -411,8 +408,7 @@ button{cursor:pointer;border:none;background:none}
     el.innerHTML = `
       <div class="flight-head">
         <div>
-          <div class="flight-title">${f.info.numero || '--'} • ${f.info.destination || '--'}</div>
-          <div class="flight-meta">${[f.info.immat, f.info.type].filter(Boolean).join(' • ') || ''}</div>
+          <div class="flight-title">${f.info.numero || '--'} ${f.info.destination || '--'}</div>
         </div>
         <div class="button-row">
           <button class="btn ghost" type="button" data-remove="${f.id}">×</button>
@@ -476,8 +472,7 @@ button{cursor:pointer;border:none;background:none}
     box.innerHTML = `
       <div class="flight-head">
         <div>
-          <div class="flight-title">${f.info.numero || '--'} • ${f.info.destination || '--'}</div>
-          <div class="flight-meta">${[f.info.immat, f.info.type].filter(Boolean).join(' • ') || ''}</div>
+          <div class="flight-title">${f.info.numero || '--'} ${f.info.destination || '--'}</div>
         </div>
       </div>
     `;
@@ -576,7 +571,6 @@ button{cursor:pointer;border:none;background:none}
   });
 
   openPaxBtn.addEventListener('click', openPax);
-  closePaxBtn.addEventListener('click', closePax);
   savePaxBtn.addEventListener('click', savePax);
   [paxAdults, paxChilds, paxInfants, secOA, secOB, secOC].forEach(el => el.addEventListener('input', computePaxUI));
   paxBackdrop.addEventListener('click', e => { if (e.target === paxBackdrop) closePax(); });
