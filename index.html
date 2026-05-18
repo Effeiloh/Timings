@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>Timings rotation</title>
 <style>
 :root,[data-theme="light"]{
@@ -20,11 +20,6 @@ button,input,textarea,select{font:inherit;color:inherit}
 button{cursor:pointer;border:none;background:none}
 :focus-visible{outline:2px solid var(--primary);outline-offset:3px;border-radius:.35rem}
 .app{max-width:1400px;margin:0 auto;padding:1rem;display:grid;gap:1.25rem}
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:1rem}
-.brand{display:flex;align-items:center;gap:.75rem}
-.logo{width:2.4rem;height:2.4rem;padding:.42rem;border-radius:.8rem;background:var(--surface);border:1px solid var(--border)}
-.brand h1{margin:0;font-size:1.28rem}
-.theme-toggle{width:2.7rem;height:2.7rem;display:grid;place-items:center;border-radius:50%;background:var(--surface);border:1px solid var(--border)}
 .layout{display:grid;gap:1rem}
 .panel{background:var(--surface);border:1px solid var(--border);border-radius:1.2rem;box-shadow:var(--shadow)}
 .setup,.preview{padding:.75rem;display:grid;gap:.65rem}
@@ -88,13 +83,7 @@ button{cursor:pointer;border:none;background:none}
 </head>
 <body>
 <div class="app">
-  <header class="topbar">
-    <div class="brand">
-      <svg class="logo" viewBox="0 0 64 64" fill="none"><rect x="8" y="8" width="48" height="48" rx="16" stroke="currentColor" stroke-width="4"></rect><path d="M32 18V32L41 38" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="32" cy="32" r="3" fill="currentColor"></circle></svg>
-      <div><h1>Timings rotation</h1></div>
-    </div>
-    <button class="theme-toggle" type="button" id="themeToggle" aria-label="Changer de thème"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
-  </header>
+  
   <main class="layout">
     <section class="panel setup">
       <div class="top-actions"><button class="btn primary" type="button" id="addFlightBtn">+</button><div id="tabsHost" class="tabs"></div></div>
@@ -121,10 +110,10 @@ button{cursor:pointer;border:none;background:none}
         <div class="stack"><div class="label">Childs</div><input class="input" id="paxChilds" type="number" min="0" step="1"></div>
         <div class="stack"><div class="label">Infants</div><input class="input" id="paxInfants" type="number" min="0" step="1"></div>
       </div>
-      <!-- id="tobSummary" ici, c'est lui qui reçoit warn-box -->
-      <div class="summary" id="tobSummary">
+      <div class="summary" id="tobSummary" style="display:grid;grid-template-columns:1fr 1fr 1fr;align-items:center;padding:.45rem .6rem">
         <div class="xs">TOB</div>
-        <strong id="paxTob">0+0</strong>
+        <strong id="paxTob" style="text-align:center">0+0</strong>
+        <div></div>
       </div>
       <div class="grid3 pax-grid pax-midline">
         <div class="stack"><div class="label">OA</div><input class="input" id="secOA" type="number" min="0" step="1"></div>
@@ -147,9 +136,8 @@ button{cursor:pointer;border:none;background:none}
 <script>
 (() => {
   const root = document.documentElement;
-  const themeToggle = document.getElementById('themeToggle');
-  let currentTheme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  root.setAttribute('data-theme', currentTheme);
+  let currentTheme = 'dark';
+  root.setAttribute('data-theme', 'dark');
 
   const tabsHost      = document.getElementById('tabsHost');
   const flightList    = document.getElementById('flightList');
@@ -208,7 +196,7 @@ button{cursor:pointer;border:none;background:none}
   // ✅ FIX 3 : sauvegarde systématique à chaque modification
   const storageKey = "timing-rotation-flights-v3";
   function saveFlights() {
-    try { localStorage.setItem(storageKey, JSON.stringify({ flights, activeFlightId, theme: currentTheme })); } catch(e) {}
+    try { localStorage.setItem(storageKey, JSON.stringify({ flights, activeFlightId })); } catch(e) {}
   }
   function loadFlights() {
     try {
@@ -217,7 +205,6 @@ button{cursor:pointer;border:none;background:none}
       const data = JSON.parse(raw);
       if (Array.isArray(data.flights)) flights = data.flights;
       if (data.activeFlightId) activeFlightId = data.activeFlightId;
-      if (data.theme) { currentTheme = data.theme; root.setAttribute('data-theme', currentTheme); }
       return flights.length > 0;
     } catch(e) { return false; }
   }
@@ -253,9 +240,9 @@ button{cursor:pointer;border:none;background:none}
     const adults  = num(paxAdults.value), childs = num(paxChilds.value), infants = num(paxInfants.value);
     const oa = num(secOA.value), ob = num(secOB.value), oc = num(secOC.value);
     const tob = adults + childs;
+    const thob = adults + childs + infants;
     paxTob.textContent = `${tob}+${infants}`;
     const sec = oa + ob + oc;
-    // ✅ FIX 1 : tobSummary est maintenant défini, pas d'erreur silencieuse
     tobSummary.classList.toggle('warn-box', sec > tob);
   }
 
@@ -454,12 +441,6 @@ button{cursor:pointer;border:none;background:none}
   function renderAll() { renderTabs(); renderFlights(); renderPreview(); saveFlights(); }
 
   // ─── Events ──────────────────────────────────────────────────────────────────
-  themeToggle.addEventListener('click', () => {
-    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    root.setAttribute('data-theme', currentTheme);
-    saveFlights();
-  });
-
   addFlightBtn.addEventListener('click', () => { const f = makeFlight(); flights.push(f); activeFlightId = f.id; renderAll(); });
 
   cancelConfirmBtn.addEventListener('click', () => confirmBackdrop.classList.remove('open'));
