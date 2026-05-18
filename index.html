@@ -86,7 +86,7 @@ button{cursor:pointer;border:none;background:none}
   
   <main class="layout">
     <section class="panel setup">
-      <div class="top-actions"><button class="btn primary" type="button" id="addFlightBtn">+</button><div id="tabsHost" class="tabs"></div></div>
+      <div class="top-actions" style="width:100%"><button class="btn primary" type="button" id="addFlightBtn">+</button><div id="tabsHost" class="tabs" style="flex:1"></div><button class="btn ghost" type="button" id="collapseInfoBtn" title="Réduire les infos vol" style="font-size:.85rem;padding:.45rem .55rem;border:1px solid var(--border);border-radius:.75rem;flex-shrink:0">▲</button></div>
       <div id="flightList" class="flight-list"></div>
     </section>
     <section class="panel preview">
@@ -127,7 +127,7 @@ button{cursor:pointer;border:none;background:none}
       </div>
       <div class="stack">
         <div class="label">SI</div>
-        <textarea class="input" id="secSI" rows="3" style="resize:vertical;font-size:.88rem" placeholder="Special information…"></textarea>
+        <div id="secSI" style="padding:.55rem .5rem;border-radius:.65rem;border:1px solid var(--border);background:var(--surface2);min-height:4rem;font-size:16px;white-space:pre-wrap;color:var(--muted);word-break:break-word"></div>
       </div>
     </div>
   </div>
@@ -224,7 +224,7 @@ button{cursor:pointer;border:none;background:none}
     secOC.value      = f.pax.oc      ?? '';
     secBags.value    = f.pax.bags    ?? '';
     secGB.value      = f.pax.gb      ?? '';
-    document.getElementById('secSI').value = f.pax.si || '';
+    const siDiv = document.getElementById('secSI'); siDiv.textContent = f.si || ''; siDiv.style.color = f.si ? 'var(--text)' : 'var(--muted)';
     computePaxUI();
     paxBackdrop.classList.add('open');
     paxBackdrop.setAttribute('aria-hidden', 'false');
@@ -253,7 +253,6 @@ button{cursor:pointer;border:none;background:none}
       adults: num(paxAdults.value), childs: num(paxChilds.value), infants: num(paxInfants.value),
       oa: num(secOA.value), ob: num(secOB.value), oc: num(secOC.value),
       bags: num(secBags.value), gb: num(secGB.value),
-      si: document.getElementById('secSI').value
     };
     saveFlights();
   }
@@ -268,17 +267,41 @@ button{cursor:pointer;border:none;background:none}
     card.className = `timing-card${value ? ' is-recorded' : ''}`;
 
     if (isSIBT) {
-      // SIBT : input time pour la saisie + bouton reset (l'input natif ne supporte pas dblclick fiablement)
+      // SIBT : saisie numérique 4 chiffres → formatage auto HH:MM + bouton reset
+      const display = value || '--:--';
       card.innerHTML = `
         <div class="timing-label">${label}</div>
         <div class="time-adjust">
-          <button class="mini-btn minus sibt-reset" type="button" title="Réinitialiser" aria-label="Réinitialiser SIBT" style="font-size:.7rem">✕</button>
-          <input class="time-input" type="time" value="${value || ''}" aria-label="${label}">
+          <button class="mini-btn minus sibt-reset" type="button" aria-label="Réinitialiser SIBT" style="font-size:.7rem">✕</button>
+          <input class="time-input sibt-input" type="tel" inputmode="numeric" maxlength="5"
+            value="${value || ''}" placeholder="--:--" aria-label="${label}"
+            style="text-align:center;letter-spacing:.05em">
           <span style="width:1.55rem"></span>
         </div>`;
-      const input = card.querySelector('input');
+      const input = card.querySelector('.sibt-input');
       const reset = card.querySelector('.sibt-reset');
-      input.addEventListener('input', e => opts.onChange(e.target.value));
+
+      // Formatage en temps réel : insert ":" après 2 chiffres
+      input.addEventListener('input', e => {
+        let raw = e.target.value.replace(/[^0-9]/g, '').slice(0, 4);
+        if (raw.length > 2) {
+          e.target.value = raw.slice(0, 2) + ':' + raw.slice(2);
+        } else {
+          e.target.value = raw;
+        }
+        // Quand 4 chiffres saisis → valider et propager
+        if (raw.length === 4) {
+          const h = parseInt(raw.slice(0, 2), 10);
+          const m = parseInt(raw.slice(2), 10);
+          if (h >= 0 && h <= 23 && m >= 0 && m <= 59) {
+            const formatted = pad(h) + ':' + pad(m);
+            opts.onChange(formatted);
+          }
+        } else if (raw.length === 0) {
+          opts.onChange('');
+        }
+      });
+
       reset.addEventListener('click', () => { input.value = ''; opts.onChange(''); });
       return card;
     }
@@ -343,7 +366,7 @@ button{cursor:pointer;border:none;background:none}
     if (!f) { flightList.innerHTML = '<div class="flight-box">Ajoute un vol pour commencer.</div>'; return; }
     const el = document.createElement('article');
     el.className = 'flight-box';
-    el.innerHTML = `
+    el.innerHTML = infoCollapsed ? '' : `
       <div class="small-cols">
         <div class="two-line">
           <input class="input" data-field="immat"       data-id="${f.id}" placeholder="Immat"       value="${f.info.immat}"       maxlength="6">
@@ -399,7 +422,7 @@ button{cursor:pointer;border:none;background:none}
     const right = document.createElement('div'); right.className = 'pair-stack';
 
     // ✅ FIX 3 : saveFlights() dans chaque onChange
-    left.appendChild(makeTimingCard('SIBT', f.times.SIBT, { onChange: v => { f.times.SIBT = v; updateSOBT(f); saveFlights(); renderPreview(); } }));
+    left.appendChild(makeTimingCard('SIBT', f.times.SIBT, { onChange: v => { f.times.SIBT = v; if (!v) f.times.SOBT = ''; else updateSOBT(f); saveFlights(); renderPreview(); } }));
     left.appendChild(makeTimingCard('AIBT', f.times.AIBT, { onChange: v => { f.times.AIBT = v; saveFlights(); renderPreview(); } }));
     right.appendChild(makeTimingCard('SOBT', f.times.SOBT, { onChange: v => { f.times.SOBT = v; saveFlights(); renderPreview(); } }));
     right.appendChild(makeTimingCard('AOBT', f.times.AOBT, { onChange: v => { f.times.AOBT = v; saveFlights(); renderPreview(); } }));
@@ -443,6 +466,14 @@ button{cursor:pointer;border:none;background:none}
   // ─── Events ──────────────────────────────────────────────────────────────────
   addFlightBtn.addEventListener('click', () => { const f = makeFlight(); flights.push(f); activeFlightId = f.id; renderAll(); });
 
+  let infoCollapsed = false;
+  const collapseInfoBtn = document.getElementById('collapseInfoBtn');
+  collapseInfoBtn.addEventListener('click', () => {
+    infoCollapsed = !infoCollapsed;
+    collapseInfoBtn.textContent = infoCollapsed ? '▼' : '▲';
+    renderFlights();
+  });
+
   cancelConfirmBtn.addEventListener('click', () => confirmBackdrop.classList.remove('open'));
   acceptConfirmBtn.addEventListener('click', () => { confirmBackdrop.classList.remove('open'); flights = []; activeFlightId = null; renderAll(); });
 
@@ -451,8 +482,6 @@ button{cursor:pointer;border:none;background:none}
   openPaxBtn.addEventListener('touchstart', e => { e.preventDefault(); openPax(); }, { passive: false });
   closePaxBtn.addEventListener('click', closePax);
 
-  const secSI = document.getElementById('secSI');
-  secSI.addEventListener('input', () => savePax());
   [paxAdults, paxChilds, paxInfants, secOA, secOB, secOC, secBags, secGB].forEach(el => {
     el.addEventListener('input',  () => { computePaxUI(); savePax(); });
     el.addEventListener('change', () => { computePaxUI(); savePax(); });
