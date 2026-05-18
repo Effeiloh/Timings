@@ -80,8 +80,7 @@ button{cursor:pointer;border:none;background:none}
 .confirm-box{width:min(420px,100%);background:var(--surface);border:1px solid var(--border);border-radius:1rem;box-shadow:var(--shadow);padding:1rem;display:grid;gap:.9rem}
 .confirm-actions{display:flex;justify-content:flex-end;gap:.6rem}
 .pax-fab{position:fixed;right:.85rem;bottom:.85rem;z-index:40;border-radius:999px;box-shadow:var(--shadow)}
-/* hint double-clic */
-.dblclick-hint{font-size:.65rem;opacity:.6;text-align:center;margin-top:.1rem;pointer-events:none}
+
 @media(min-width:960px){.layout{grid-template-columns:420px 1fr}.flight-list{grid-template-columns:1fr 1fr}.flight-grid{grid-template-columns:1fr 1fr}}
 @media(min-width:1220px){.flight-list{grid-template-columns:repeat(3,1fr)}.flight-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:520px){.app{padding:.35rem}.setup,.preview{padding:.4rem}.timing-card{min-height:4.3rem}.mini-btn{width:1.35rem;height:1.35rem}.grid2,.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}.modal{width:min(94vw,360px);max-height:calc(100dvh - 1rem);height:auto;align-self:flex-start;transform:translateY(.25rem)}.modal-backdrop{align-items:flex-start;padding:.25rem}.modal-body{padding:.35rem;gap:.28rem}.modal-head{padding:.55rem}.modal-foot{padding:.45rem}.pax-grid{gap:.14rem}.pax-grid .label{font-size:.68rem}.pax-grid .input{padding:.34rem .22rem;font-size:.86rem}.pax-topline,.pax-midline,.pax-bottomline{grid-template-columns:repeat(3,minmax(0,1fr))}.pax-bottomline{margin-bottom:.05rem}.summary{padding:.48rem .55rem}}
@@ -267,51 +266,59 @@ button{cursor:pointer;border:none;background:none}
   }
 
   // ─── Timing cards ────────────────────────────────────────────────────────────
-  // ✅ FIX 2 : double-clic efface sur TOUS les types de carte (SIBT compris via input time, les autres via bouton)
+  // ─── Timing cards ─────────────────────────────────────────────────────────────
+  // Clic simple = horodatage ; double-clic = effacement
+  // On distingue les deux avec un timer (le navigateur fire click×2 avant dblclick)
   function makeTimingCard(label, value, opts = {}) {
-    const isSIBT  = label === 'SIBT';
-    const isSOBT  = label === 'SOBT';
-    const card    = document.createElement('article');
+    const isSIBT = label === 'SIBT';
+    const card   = document.createElement('article');
     card.className = `timing-card${value ? ' is-recorded' : ''}`;
 
     if (isSIBT) {
-      // SIBT : input time natif + double-clic pour effacer
+      // SIBT : input time pour la saisie + bouton reset (l'input natif ne supporte pas dblclick fiablement)
       card.innerHTML = `
         <div class="timing-label">${label}</div>
         <div class="time-adjust">
+          <button class="mini-btn minus sibt-reset" type="button" title="Réinitialiser" aria-label="Réinitialiser SIBT" style="font-size:.7rem">✕</button>
           <input class="time-input" type="time" value="${value || ''}" aria-label="${label}">
-        </div>
-        <div class="dblclick-hint">dbl-clic pour effacer</div>`;
+          <span style="width:1.55rem"></span>
+        </div>`;
       const input = card.querySelector('input');
-      input.addEventListener('input', e => { opts.onChange(e.target.value); });
-      // ✅ double-clic sur l'input SIBT
-      input.addEventListener('dblclick', () => { opts.onChange(''); });
+      const reset = card.querySelector('.sibt-reset');
+      input.addEventListener('input', e => opts.onChange(e.target.value));
+      reset.addEventListener('click', () => { input.value = ''; opts.onChange(''); });
       return card;
     }
 
-    // Toutes les autres cartes : bouton horodatage + +/−
-    const plusMinus = `
-      <button class="mini-btn minus" type="button" aria-label="−1 min">−</button>
-      <button class="time-btn" type="button">${value || '--:--'}</button>
-      <button class="mini-btn plus" type="button" aria-label="+1 min">+</button>`;
     card.innerHTML = `
       <div class="timing-label">${label}</div>
-      <div class="time-adjust">${plusMinus}</div>
-      <div class="dblclick-hint">dbl-clic pour effacer</div>`;
+      <div class="time-adjust">
+        <button class="mini-btn minus" type="button" aria-label="moins 1 min">−</button>
+        <button class="time-btn" type="button">${value || '--:--'}</button>
+        <button class="mini-btn plus"  type="button" aria-label="plus 1 min">+</button>
+      </div>`;
 
     const minus = card.querySelector('.minus');
     const plus  = card.querySelector('.plus');
     const btn   = card.querySelector('.time-btn');
 
-    const apply = v => { opts.onChange(v); };
+    // Timer pour distinguer clic simple / double-clic
+    let clickTimer = null;
+    btn.addEventListener('click', () => {
+      if (clickTimer !== null) {
+        clearTimeout(clickTimer);
+        clickTimer = null;
+        opts.onChange(''); // double-clic → effacement
+      } else {
+        clickTimer = setTimeout(() => {
+          clickTimer = null;
+          opts.onChange(nowTime()); // clic simple → horodatage
+        }, 260);
+      }
+    });
 
-    // clic simple → horodatage maintenant
-    btn.addEventListener('click', () => apply(nowTime()));
-    // ✅ double-clic → efface sur TOUTES les cartes y compris SOBT
-    btn.addEventListener('dblclick', () => apply(''));
-
-    if (minus) minus.addEventListener('click', () => { if (value) apply(shift(value, -1)); });
-    if (plus)  plus.addEventListener('click',  () => { if (value) apply(shift(value, +1)); });
+    minus.addEventListener('click', () => { if (value) opts.onChange(shift(value, -1)); });
+    plus.addEventListener('click',  () => { if (value) opts.onChange(shift(value, +1)); });
 
     return card;
   }
@@ -342,7 +349,7 @@ button{cursor:pointer;border:none;background:none}
       <div class="small-cols">
         <div class="two-line">
           <input class="input" data-field="immat"       data-id="${f.id}" placeholder="Immat"       value="${f.info.immat}"       maxlength="6">
-          <input class="input" data-field="numero"      data-id="${f.id}" placeholder="N°Vol"       value="${f.info.numero}">
+          <input class="input" data-field="numero" data-id="${f.id}" placeholder="N°Vol" value="${f.info.numero}" type="tel" inputmode="numeric" pattern="[0-9]*">
         </div>
         <div class="two-line">
           <select class="input" data-field="type" data-id="${f.id}">
@@ -367,6 +374,9 @@ button{cursor:pointer;border:none;background:none}
         } else if (field === 'immat') {
           e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
           fl.info.immat = e.target.value;
+        } else if (field === 'numero') {
+          e.target.value = e.target.value.replace(/[^0-9]/g, '');
+          fl.info.numero = e.target.value;
         } else {
           fl.info[field] = e.target.value;
         }
@@ -394,7 +404,14 @@ button{cursor:pointer;border:none;background:none}
 
     const box = document.createElement('article');
     box.className = 'flight-box';
-    box.innerHTML = `<div class="flight-head"><div><div class="flight-title">${f.info.numero || '--'} ${f.info.destination || '--'}</div></div></div>`;
+    box.innerHTML = `<div class="flight-head"><div><div class="flight-title preview-close-flight" data-close-id="${f.id}">${f.info.numero || '--'} ${f.info.destination || '--'}</div><div class="flight-meta">Dbl-clic pour fermer</div></div></div>`;
+    box.querySelector('.preview-close-flight').addEventListener('dblclick', () => {
+      if (confirm('Fermer ce vol ?')) {
+        flights = flights.filter(x => x.id !== f.id);
+        if (activeFlightId === f.id) activeFlightId = flights[0]?.id || null;
+        renderAll();
+      }
+    });
 
     const top   = document.createElement('div'); top.className = 'top-pair';
     const left  = document.createElement('div'); left.className = 'pair-stack';
