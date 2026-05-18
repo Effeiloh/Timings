@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 <title>Timings rotation</title>
 <style>
 :root,[data-theme="light"]{
@@ -51,7 +51,7 @@ button{cursor:pointer;border:none;background:none}
 .pair-stack{display:grid;gap:.9rem}
 .timing-card{min-height:5.1rem;padding:.58rem;border-radius:var(--radius2);background:var(--primary);color:white;box-shadow:var(--shadow);display:grid;gap:.35rem;align-content:center}
 .timing-card.is-recorded{background:var(--success)}
-.timing-label{font-size:.82rem;font-weight:700}
+.timing-label{font-size:.82rem;font-weight:700;text-align:center}
 .time-adjust{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:.3rem}
 .mini-btn{width:1.55rem;height:1.55rem;border-radius:.5rem;background:rgba(255,255,255,.18);color:white;font-weight:700;font-size:.82rem;display:grid;place-items:center}
 .time-btn,.time-input{width:100%;padding:.36rem .45rem;border-radius:.6rem;background:rgba(255,255,255,.14);color:white;text-align:center;font-size:.88rem;font-weight:700;font-variant-numeric:tabular-nums;touch-action:manipulation}
@@ -69,7 +69,7 @@ button{cursor:pointer;border:none;background:none}
 .grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.3rem}.grid3 .stack{min-width:0}
 .stack{display:grid;gap:.35rem}
 .label{font-size:.78rem;font-weight:700}
-.input{width:100%;padding:.55rem .5rem;border-radius:.65rem;border:1px solid var(--border);background:var(--bg);min-width:0}
+.input,textarea.input{width:100%;padding:.55rem .5rem;border-radius:.65rem;border:1px solid var(--border);background:var(--bg);min-width:0;font-size:16px!important}
 .summary{padding:.75rem .8rem;border-radius:.1rem;border:1px solid var(--border);background:var(--surface2);display:grid;gap:.2rem}
 .summary strong{font-size:1.05rem}.summary.warn-box{border-color:var(--danger);box-shadow:0 0 0 1px var(--danger) inset}
 .warn{color:var(--danger);font-weight:700}
@@ -367,7 +367,7 @@ button{cursor:pointer;border:none;background:none}
             <option value="">Type avion</option>
             <option value="B738" ${f.info.type==='B738'?'selected':''}>B738</option>
             <option value="B38M" ${f.info.type==='B38M'?'selected':''}>B38M</option>
-            <option value="A20"  ${f.info.type==='A20' ?'selected':''}>A20</option>
+            <option value="A320"  ${f.info.type==='A20' ?'selected':''}>A320</option>
           </select>
           <input class="input" data-field="destination" data-id="${f.id}" placeholder="Destination" value="${f.info.destination}" maxlength="3">
         </div>
