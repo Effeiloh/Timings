@@ -101,7 +101,7 @@ button{cursor:pointer;border:none;background:none}
       <div id="flightList" class="flight-list"></div>
     </section>
     <section class="panel preview">
-      <div class="section-title"><div><h2>Timings du vol</h2></div><button class="btn primary pax-fab" type="button" id="openPaxBtn">LID</button></div>
+      <div class="section-title" style="align-items:center"><div><h2 style="margin:0;font-size:1rem">Timings</h2></div><button class="btn primary pax-fab" type="button" id="openPaxBtn">LID</button></div>
       <div id="previewArea" class="flight-grid"></div>
     </section>
   </main>
@@ -135,6 +135,10 @@ button{cursor:pointer;border:none;background:none}
         <div class="stack"><div class="label">BAGS</div><input class="input" id="secBags" type="number" min="0" step="1"></div>
         <div class="stack"><div class="label">GB</div><input class="input" id="secGB" type="number" min="0" step="1"></div>
         <div></div>
+      </div>
+      <div class="stack">
+        <div class="label">SI</div>
+        <textarea class="input" id="secSI" rows="3" style="resize:vertical;font-size:.88rem" placeholder="Special information…"></textarea>
       </div>
     </div>
   </div>
@@ -233,6 +237,7 @@ button{cursor:pointer;border:none;background:none}
     secOC.value      = f.pax.oc      ?? '';
     secBags.value    = f.pax.bags    ?? '';
     secGB.value      = f.pax.gb      ?? '';
+    document.getElementById('secSI').value = f.pax.si || '';
     computePaxUI();
     paxBackdrop.classList.add('open');
     paxBackdrop.setAttribute('aria-hidden', 'false');
@@ -260,7 +265,8 @@ button{cursor:pointer;border:none;background:none}
     f.pax = {
       adults: num(paxAdults.value), childs: num(paxChilds.value), infants: num(paxInfants.value),
       oa: num(secOA.value), ob: num(secOB.value), oc: num(secOC.value),
-      bags: num(secBags.value), gb: num(secGB.value)
+      bags: num(secBags.value), gb: num(secGB.value),
+      si: document.getElementById('secSI').value
     };
     saveFlights();
   }
@@ -421,6 +427,20 @@ button{cursor:pointer;border:none;background:none}
     });
     box.appendChild(grid);
 
+    // SI block
+    const siBlock = document.createElement('div');
+    siBlock.style.cssText = 'display:grid;gap:.35rem;margin-top:.25rem';
+    siBlock.innerHTML = '<div style="font-size:.78rem;font-weight:700">SI</div>';
+    const siTa = document.createElement('textarea');
+    siTa.className = 'input';
+    siTa.rows = 3;
+    siTa.style.cssText = 'resize:vertical;width:100%;font-size:.88rem';
+    siTa.placeholder = 'Special information…';
+    siTa.value = f.si || '';
+    siTa.addEventListener('input', () => { f.si = siTa.value; saveFlights(); });
+    siBlock.appendChild(siTa);
+    box.appendChild(siBlock);
+
     const footer = document.createElement('div');
     footer.style.cssText = 'display:flex;justify-content:center;margin-top:.25rem';
     const closeAll = document.createElement('button');
@@ -450,6 +470,8 @@ button{cursor:pointer;border:none;background:none}
   openPaxBtn.addEventListener('touchstart', e => { e.preventDefault(); openPax(); }, { passive: false });
   closePaxBtn.addEventListener('click', closePax);
 
+  const secSI = document.getElementById('secSI');
+  secSI.addEventListener('input', () => savePax());
   [paxAdults, paxChilds, paxInfants, secOA, secOB, secOC, secBags, secGB].forEach(el => {
     el.addEventListener('input',  () => { computePaxUI(); savePax(); });
     el.addEventListener('change', () => { computePaxUI(); savePax(); });
