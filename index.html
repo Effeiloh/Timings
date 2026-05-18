@@ -5,78 +5,121 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Timings rotation</title>
 <style>
-  :root,[data-theme="light"]{
-    --bg:#f7f6f2;--surface:#fbfbf9;--surface2:#f3f0ec;--border:#d4d1ca;--text:#28251d;--muted:#6f6d67;--primary:#01696f;--success:#437a22;--radius:.75rem;--radius2:1.15rem;--shadow:0 8px 24px rgba(0,0,0,.08);--font:system-ui,sans-serif
-  }
-  [data-theme="dark"]{
-    --bg:#171614;--surface:#1c1b19;--surface2:#22211f;--border:#393836;--text:#e3e0d9;--muted:#a5a19b;--primary:#4f98a3;--success:#6daa45;--shadow:0 12px 32px rgba(0,0,0,.28)
-  }
-  *{box-sizing:border-box}
-  body{margin:0;min-height:100dvh;font-family:var(--font);background:var(--bg);color:var(--text)}
-  button,input,textarea{font:inherit;color:inherit}
-  button{cursor:pointer;border:none;background:none}
-  :focus-visible{outline:2px solid var(--primary);outline-offset:3px;border-radius:.35rem}
-  .app{max-width:1400px;margin:0 auto;padding:1rem;display:grid;gap:1.25rem}
-  .topbar{display:flex;justify-content:space-between;align-items:center;gap:1rem}
-  .brand{display:flex;align-items:center;gap:.75rem}
-  .logo{width:2.4rem;height:2.4rem;padding:.42rem;border-radius:.8rem;background:var(--surface);border:1px solid var(--border)}
-  .brand h1{margin:0;font-size:1.28rem}
-  .brand p{margin:0;color:var(--muted);font-size:.9rem}
-  .theme-toggle{width:2.7rem;height:2.7rem;display:grid;place-items:center;border-radius:50%;background:var(--surface);border:1px solid var(--border)}
-  .layout{display:grid;gap:1rem}
-  .panel{background:var(--surface);border:1px solid var(--border);border-radius:1.2rem;box-shadow:var(--shadow)}
-  .setup,.preview{padding:1rem;display:grid;gap:1rem}
-  .section-title{display:flex;justify-content:space-between;gap:.75rem;align-items:flex-start;flex-wrap:wrap}
-  .muted{color:var(--muted)}
-  .fields{display:grid;gap:.85rem}
-  .field{display:grid;gap:.35rem}
-  .label{font-size:.9rem;font-weight:600}
-  .input,.textarea{width:100%;padding:.9rem 1rem;border-radius:.75rem;border:1px solid var(--border);background:var(--bg)}
-  .textarea{min-height:7rem;resize:vertical}
-  .button-row{display:flex;gap:.65rem;flex-wrap:wrap}
-  .btn{padding:.85rem 1rem;border-radius:.75rem;border:1px solid var(--border);background:var(--surface2);font-weight:600}
-  .btn.primary{background:var(--primary);border-color:var(--primary);color:white}
-  .btn.ghost{background:transparent}
-  .flight-list{display:grid;gap:.8rem}
-  .flight-card{border:1px solid var(--border);border-radius:1rem;background:var(--surface2);padding:.9rem;display:grid;gap:.8rem}
-  .flight-head{display:flex;justify-content:space-between;gap:.75rem;align-items:center;flex-wrap:wrap}
-  .flight-title{font-weight:700}
-  .flight-meta{font-size:.86rem;color:var(--muted)}
-  .small-cols{display:grid;gap:.7rem}
-  .time-blocks{display:grid;gap:.9rem}
-  .top-pair{display:grid;grid-template-columns:1.15fr .85fr;gap:.9rem;align-items:start}
-  .pair-stack{display:grid;gap:.9rem}
-  .timing-card{min-height:7rem;padding:.95rem;border-radius:var(--radius2);background:var(--primary);color:white;box-shadow:var(--shadow);display:grid;gap:.75rem;align-content:center}
-  .timing-card.is-recorded{background:var(--success)}
-  .timing-label{font-size:1rem;font-weight:700}
-  .time-adjust{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:.45rem}
-  .mini-btn{width:2.05rem;height:2.05rem;border-radius:.75rem;background:rgba(255,255,255,.18);color:white;font-weight:700;font-size:1.1rem;display:grid;place-items:center}
-  .time-btn,.time-input{width:100%;padding:.75rem .8rem;border-radius:.75rem;background:rgba(255,255,255,.14);color:white;text-align:center;font-size:1.12rem;font-weight:700;font-variant-numeric:tabular-nums}
-  .time-input{border:1px solid rgba(255,255,255,.28);padding:.62rem .7rem}
-  .time-input::-webkit-calendar-picker-indicator{filter:invert(1)}
-  .timing-help{font-size:.84rem;opacity:.9}
-  .flight-grid{display:grid;gap:1rem}
-  .flight-box{padding:1rem;border:1px solid var(--border);border-radius:1rem;background:var(--surface2);display:grid;gap:1rem}
-  .flight-actions{display:flex;gap:.6rem;flex-wrap:wrap}
-  .tag{display:inline-flex;align-items:center;padding:.32rem .6rem;border-radius:9999px;background:#dfe9e8;color:var(--primary);font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
-  .footer{font-size:.88rem;color:var(--muted);text-align:center;padding-bottom:1rem}
-  @media(min-width:960px){
-    .layout{grid-template-columns:420px 1fr}
-    .small-cols{grid-template-columns:1fr 1fr}
-    .flight-list{grid-template-columns:1fr 1fr}
-    .flight-grid{grid-template-columns:1fr 1fr}
-  }
-  @media(min-width:1220px){
-    .flight-list{grid-template-columns:repeat(3,1fr)}
-    .flight-grid{grid-template-columns:repeat(2,1fr)}
-    .top-pair{grid-template-columns:1.1fr .9fr}
-  }
-  @media(max-width:520px){
-    .app{padding:.75rem}
-    .setup,.preview{padding:.85rem}
-    .timing-card{min-height:6.5rem}
-    .mini-btn{width:1.95rem;height:1.95rem}
-  }
+:root,[data-theme="light"]{
+  --bg:#f7f6f2;--surface:#fbfbf9;--surface2:#f3f0ec;--border:#d4d1ca;--text:#28251d;
+  --muted:#6f6d67;--primary:#01696f;--success:#437a22;--radius:.75rem;--radius2:1.15rem;
+  --shadow:0 8px 24px rgba(0,0,0,.08);--font:system-ui,sans-serif
+}
+[data-theme="dark"]{
+  --bg:#171614;--surface:#1c1b19;--surface2:#22211f;--border:#393836;--text:#e3e0d9;
+  --muted:#a5a19b;--primary:#4f98a3;--success:#6daa45;--shadow:0 12px 32px rgba(0,0,0,.28)
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100dvh;font-family:var(--font);background:var(--bg);color:var(--text)
+}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:none;background:none}
+:focus-visible{outline:2px solid var(--primary);outline-offset:3px;border-radius:.35rem}
+.app{
+  max-width:1400px;margin:0 auto;padding:1rem;display:grid;gap:1.25rem
+}
+.topbar{
+  display:flex;justify-content:space-between;align-items:center;gap:1rem
+}
+.brand{
+  display:flex;align-items:center;gap:.75rem
+}
+.logo{
+  width:2.4rem;height:2.4rem;padding:.42rem;border-radius:.8rem;
+  background:var(--surface);border:1px solid var(--border)
+}
+.brand h1{margin:0;font-size:1.28rem}
+.brand p{margin:0;color:var(--muted);font-size:.9rem}
+.theme-toggle{
+  width:2.7rem;height:2.7rem;display:grid;place-items:center;border-radius:50%;
+  background:var(--surface);border:1px solid var(--border)
+}
+.layout{display:grid;gap:1rem}
+.panel{
+  background:var(--surface);border:1px solid var(--border);border-radius:1.2rem;box-shadow:var(--shadow)
+}
+.setup,.preview{
+  padding:1rem;display:grid;gap:1rem
+}
+.section-title{
+  display:flex;justify-content:space-between;gap:.75rem;align-items:flex-start;flex-wrap:wrap
+}
+.muted{color:var(--muted)}
+.fields{display:grid;gap:.85rem}
+.field{display:grid;gap:.35rem}
+.label{font-size:.9rem;font-weight:600}
+.input,.textarea{
+  width:100%;padding:.9rem 1rem;border-radius:.75rem;border:1px solid var(--border);background:var(--bg)
+}
+.textarea{min-height:7rem;resize:vertical}
+.button-row{display:flex;gap:.65rem;flex-wrap:wrap}
+.btn{
+  padding:.85rem 1rem;border-radius:.75rem;border:1px solid var(--border);background:var(--surface2);font-weight:600
+}
+.btn.primary{background:var(--primary);border-color:var(--primary);color:white}
+.btn.ghost{background:transparent}
+.flight-list{display:grid;gap:.8rem}
+.flight-box{
+  border:1px solid var(--border);border-radius:1rem;background:var(--surface2);padding:.9rem;display:grid;gap:.8rem
+}
+.flight-head{
+  display:flex;justify-content:space-between;gap:.75rem;align-items:center;flex-wrap:wrap
+}
+.flight-title{font-weight:700}
+.flight-meta{font-size:.86rem;color:var(--muted)}
+.small-cols{display:grid;gap:.7rem}
+.time-blocks{display:grid;gap:.9rem}
+.top-pair{
+  display:grid;grid-template-columns:1fr 1fr;gap:.9rem;align-items:start
+}
+.pair-stack{display:grid;gap:.9rem}
+.timing-card{
+  min-height:5.9rem;padding:.72rem;border-radius:var(--radius2);background:var(--primary);
+  color:white;box-shadow:var(--shadow);display:grid;gap:.45rem;align-content:center
+}
+.timing-card.is-recorded{background:var(--success)}
+.timing-label{font-size:.95rem;font-weight:700}
+.time-adjust{
+  display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:.45rem
+}
+.mini-btn{
+  width:1.75rem;height:1.75rem;border-radius:.65rem;background:rgba(255,255,255,.18);
+  color:white;font-weight:700;font-size:.95rem;display:grid;place-items:center
+}
+.time-btn,.time-input{
+  width:100%;padding:.55rem .65rem;border-radius:.75rem;background:rgba(255,255,255,.14);
+  color:white;text-align:center;font-size:1rem;font-weight:700;font-variant-numeric:tabular-nums
+}
+.time-input{border:1px solid rgba(255,255,255,.28)}
+.time-input::-webkit-calendar-picker-indicator{filter:invert(1)}
+.timing-help{font-size:.8rem;opacity:.85}
+.flight-grid{display:grid;gap:1rem}
+.flight-box .time-blocks .timing-card{min-height:5.6rem}
+.footer{
+  font-size:.88rem;color:var(--muted);text-align:center;padding-bottom:1rem
+}
+@media(min-width:960px){
+  .layout{grid-template-columns:420px 1fr}
+  .small-cols{grid-template-columns:1fr 1fr}
+  .flight-list{grid-template-columns:1fr 1fr}
+  .flight-grid{grid-template-columns:1fr 1fr}
+}
+@media(min-width:1220px){
+  .flight-list{grid-template-columns:repeat(3,1fr)}
+  .flight-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:520px){
+  .app{padding:.75rem}
+  .setup,.preview{padding:.85rem}
+  .timing-card{min-height:5.5rem}
+  .mini-btn{width:1.65rem;height:1.65rem}
+}
 </style>
 </head>
 <body>
@@ -108,6 +151,7 @@
           <p class="muted">Ajoute autant de vols que nécessaire, puis personnalise chaque fiche.</p>
         </div>
       </div>
+
       <div class="fields">
         <div class="button-row">
           <button class="btn primary" type="button" id="addFlightBtn">Ajouter un vol</button>
@@ -115,13 +159,14 @@
           <button class="btn ghost" type="button" id="resetBtn">Réinitialiser</button>
         </div>
       </div>
+
       <div id="flightList" class="flight-list"></div>
     </section>
 
     <section class="panel preview">
       <div class="section-title">
         <div>
-          <span class="tag">Aperçu</span>
+          <span class="tag" style="display:inline-flex;align-items:center;padding:.32rem .6rem;border-radius:9999px;background:#dfe9e8;color:var(--primary);font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Aperçu</span>
           <h2>Bloc timings</h2>
           <p class="muted">SIBT/AIBT en bloc gauche, SOBT/AOBT à droite, puis les autres timings du vol.</p>
         </div>
@@ -157,7 +202,7 @@
   const pad = n => String(n).padStart(2, '0');
   const nowTime = () => new Intl.DateTimeFormat('fr-FR', { hour: '2-digit', minute: '2-digit' }).format(new Date());
   const shift = (time, delta) => {
-    if (!time || !/\\d{2}:\\d{2}/.test(time)) return time || '--:--';
+    if (!time || !/\d{2}:\d{2}/.test(time)) return time || '--:--';
     const [h, m] = time.split(':').map(Number);
     const t = ((h * 60 + m + delta) % 1440 + 1440) % 1440;
     return `${pad(Math.floor(t / 60))}:${pad(t % 60)}`;
@@ -173,7 +218,9 @@
   }
 
   function updateSOBT(f) {
-    if (f.times.SIBT) f.times.SOBT = shift(f.times.SIBT, 25);
+    if (f.times.SIBT) {
+      f.times.SOBT = shift(f.times.SIBT, 25);
+    }
   }
 
   function makeTimingCard(label, value, opts = {}) {
@@ -188,10 +235,14 @@
         <div class="time-adjust">
           <input class="time-input" type="time" value="${value || ''}" aria-label="${label}">
         </div>
-        <div class="timing-help">Heure manuelle.</div>
       `;
       const input = card.querySelector('input');
-      input.addEventListener('input', e => opts.onChange(e.target.value));
+      input.addEventListener('input', e => {
+        opts.onChange(e.target.value);
+      });
+      input.addEventListener('dblclick', () => {
+        opts.onChange('');
+      });
       return card;
     }
 
@@ -202,16 +253,25 @@
         <button class="time-btn" type="button">${value || '--:--'}</button>
         <button class="mini-btn plus" type="button">+</button>
       </div>
-      <div class="timing-help">${isSOBT ? 'SIBT + 25 min par défaut, modifiable.' : 'Appui central = heure actuelle.'}</div>
+      ${isSOBT ? '' : ''}
     `;
 
     const minus = card.querySelector('.minus');
     const plus = card.querySelector('.plus');
     const btn = card.querySelector('.time-btn');
 
-    btn.addEventListener('click', () => opts.onChange(nowTime()));
-    minus.addEventListener('click', () => { if (value) opts.onChange(shift(value, -1)); });
-    plus.addEventListener('click', () => { if (value) opts.onChange(shift(value, 1)); });
+    btn.addEventListener('click', () => {
+      opts.onChange(nowTime());
+    });
+    btn.addEventListener('dblclick', () => {
+      opts.onChange('');
+    });
+    minus.addEventListener('click', () => {
+      if (value) opts.onChange(shift(value, -1));
+    });
+    plus.addEventListener('click', () => {
+      if (value) opts.onChange(shift(value, 1));
+    });
 
     return card;
   }
@@ -219,7 +279,7 @@
   function renderPreview(f = flights[0]) {
     previewArea.innerHTML = '';
     if (!f) {
-      previewArea.innerHTML = '<div class="panel" style="padding:1rem">Ajoute un vol pour voir l’aperçu.</div>';
+      previewArea.innerHTML = '<div class="panel" style="padding:1rem">Ajoute un vol pour voir la zone timings.</div>';
       return;
     }
 
@@ -247,19 +307,35 @@
 
     left.appendChild(makeTimingCard('SIBT', f.times.SIBT, {
       small: true,
-      onChange: v => { f.times.SIBT = v; updateSOBT(f); renderPreview(f); }
+      onChange: v => {
+        f.times.SIBT = v;
+        updateSOBT(f);
+        renderPreview(f);
+      }
     }));
+
     left.appendChild(makeTimingCard('AIBT', f.times.AIBT, {
       small: true,
-      onChange: v => { f.times.AIBT = v; renderPreview(f); }
+      onChange: v => {
+        f.times.AIBT = v;
+        renderPreview(f);
+      }
     }));
+
     right.appendChild(makeTimingCard('SOBT', f.times.SOBT, {
       small: true,
-      onChange: v => { f.times.SOBT = v; renderPreview(f); }
+      onChange: v => {
+        f.times.SOBT = v;
+        renderPreview(f);
+      }
     }));
+
     right.appendChild(makeTimingCard('AOBT', f.times.AOBT, {
       small: true,
-      onChange: v => { f.times.AOBT = v; renderPreview(f); }
+      onChange: v => {
+        f.times.AOBT = v;
+        renderPreview(f);
+      }
     }));
 
     top.append(left, right);
@@ -267,13 +343,17 @@
 
     const grid = document.createElement('div');
     grid.className = 'time-blocks';
+
     baseLabels.filter(x => !['SIBT','AIBT','SOBT','AOBT'].includes(x)).forEach(label => {
       grid.appendChild(makeTimingCard(label, f.others[label], {
-        onChange: v => { f.others[label] = v; renderPreview(f); }
+        onChange: v => {
+          f.others[label] = v;
+          renderPreview(f);
+        }
       }));
     });
-    box.appendChild(grid);
 
+    box.appendChild(grid);
     previewArea.appendChild(box);
   }
 
@@ -300,10 +380,6 @@
           <input class="input" data-field="type" data-id="${f.id}" placeholder="Type avion" value="${f.info.type}">
           <input class="input" data-field="destination" data-id="${f.id}" placeholder="Destination" value="${f.info.destination}">
         </div>
-
-        <div class="button-row">
-          <button class="btn primary" type="button" data-preview="${f.id}">Voir l’aperçu</button>
-        </div>
       `;
       flightList.appendChild(el);
     });
@@ -322,13 +398,6 @@
         renderPreview();
       });
     });
-
-    document.querySelectorAll('[data-preview]').forEach(btn => {
-      btn.addEventListener('click', e => {
-        const f = flights.find(x => x.id === e.target.dataset.preview);
-        renderPreview(f);
-      });
-    });
   }
 
   function addFlight() {
@@ -338,7 +407,7 @@
   }
 
   function exportAll() {
-    const rows = [['Vol', 'Immat', 'Compagnie', 'N°Vol', 'Type avion', 'Destination', 'Timings']];
+    const rows = [['Vol','Immat','Compagnie','N°Vol','Type avion','Destination','Timings']];
     flights.forEach((f, i) => {
       rows.push([
         String(i + 1),
@@ -350,7 +419,7 @@
         JSON.stringify({ times: f.times, others: f.others })
       ]);
     });
-    const csv = rows.map(r => r.map(c => `"${String(c ?? '').replace(/"/g, '""')}"`).join(';')).join('\\n');
+    const csv = rows.map(r => r.map(c => `"${String(c ?? '').replace(/"/g, '""')}"`).join(';')).join('\n');
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
