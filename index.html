@@ -331,7 +331,15 @@ button{cursor:pointer;border:none;background:none}
       b.className = 'tab-btn' + (f.id === activeFlightId ? ' active' : '');
       b.type = 'button';
       b.textContent = `${f.info.numero || '--'}${f.info.destination ? ' • ' + f.info.destination : ''}`;
-      b.onclick = () => { activeFlightId = f.id; renderAll(); };
+      b.addEventListener('click', () => { activeFlightId = f.id; renderAll(); });
+      b.addEventListener('dblclick', e => {
+        e.stopPropagation();
+        if (confirm('Fermer ce vol ?')) {
+          flights = flights.filter(x => x.id !== f.id);
+          if (activeFlightId === f.id) activeFlightId = flights[0]?.id || null;
+          renderAll();
+        }
+      });
       tabsHost.appendChild(b);
     });
   }
@@ -343,9 +351,6 @@ button{cursor:pointer;border:none;background:none}
     const el = document.createElement('article');
     el.className = 'flight-box';
     el.innerHTML = `
-      <div class="flight-head">
-        <div><div class="flight-title" data-close-flight="${f.id}">${f.info.numero || '--'} ${f.info.destination || '--'}</div></div>
-      </div>
       <div class="small-cols">
         <div class="two-line">
           <input class="input" data-field="immat"       data-id="${f.id}" placeholder="Immat"       value="${f.info.immat}"       maxlength="6">
@@ -385,16 +390,6 @@ button{cursor:pointer;border:none;background:none}
       });
     });
 
-    document.querySelectorAll('[data-close-flight]').forEach(el => {
-      el.addEventListener('dblclick', e => {
-        const id = e.currentTarget.dataset.closeFlight;
-        if (confirm('Fermer ce vol ?')) {
-          flights = flights.filter(x => x.id !== id);
-          if (activeFlightId === id) activeFlightId = flights[0]?.id || null;
-          renderAll();
-        }
-      });
-    });
   }
 
   function renderPreview() {
@@ -404,14 +399,7 @@ button{cursor:pointer;border:none;background:none}
 
     const box = document.createElement('article');
     box.className = 'flight-box';
-    box.innerHTML = `<div class="flight-head"><div><div class="flight-title preview-close-flight" data-close-id="${f.id}">${f.info.numero || '--'} ${f.info.destination || '--'}</div><div class="flight-meta">Dbl-clic pour fermer</div></div></div>`;
-    box.querySelector('.preview-close-flight').addEventListener('dblclick', () => {
-      if (confirm('Fermer ce vol ?')) {
-        flights = flights.filter(x => x.id !== f.id);
-        if (activeFlightId === f.id) activeFlightId = flights[0]?.id || null;
-        renderAll();
-      }
-    });
+
 
     const top   = document.createElement('div'); top.className = 'top-pair';
     const left  = document.createElement('div'); left.className = 'pair-stack';
