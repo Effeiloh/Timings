@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Timings rotation</title>
+<style>
+  :root,[data-theme="light"]{
+    --bg:#f7f6f2;--surface:#fbfbf9;--surface2:#f3f0ec;--border:#d4d1ca;--text:#28251d;--muted:#6f6d67;--primary:#01696f;--success:#437a22;--radius:.75rem;--radius2:1.15rem;--shadow:0 8px 24px rgba(0,0,0,.08);--font:system-ui,sans-serif
+  }
+  [data-theme="dark"]{
+    --bg:#171614;--surface:#1c1b19;--surface2:#22211f;--border:#393836;--text:#e3e0d9;--muted:#a5a19b;--primary:#4f98a3;--success:#6daa45;--shadow:0 12px 32px rgba(0,0,0,.28)
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100dvh;font-family:var(--font);background:var(--bg);color:var(--text)}
+  button,input,textarea{font:inherit;color:inherit}
+  button{cursor:pointer;border:none;background:none}
+  :focus-visible{outline:2px solid var(--primary);outline-offset:3px;border-radius:.35rem}
+  .app{max-width:1400px;margin:0 auto;padding:1rem;display:grid;gap:1.25rem}
+  .topbar{display:flex;justify-content:space-between;align-items:center;gap:1rem}
+  .brand{display:flex;align-items:center;gap:.75rem}
+  .logo{width:2.4rem;height:2.4rem;padding:.42rem;border-radius:.8rem;background:var(--surface);border:1px solid var(--border)}
+  .brand h1{margin:0;font-size:1.28rem}
+  .brand p{margin:0;color:var(--muted);font-size:.9rem}
+  .theme-toggle{width:2.7rem;height:2.7rem;display:grid;place-items:center;border-radius:50%;background:var(--surface);border:1px solid var(--border)}
+  .layout{display:grid;gap:1rem}
+  .panel{background:var(--surface);border:1px solid var(--border);border-radius:1.2rem;box-shadow:var(--shadow)}
+  .setup,.preview{padding:1rem;display:grid;gap:1rem}
+  .section-title{display:flex;justify-content:space-between;gap:.75rem;align-items:flex-start;flex-wrap:wrap}
+  .muted{color:var(--muted)}
+  .fields{display:grid;gap:.85rem}
+  .field{display:grid;gap:.35rem}
+  .label{font-size:.9rem;font-weight:600}
+  .input,.textarea{width:100%;padding:.9rem 1rem;border-radius:.75rem;border:1px solid var(--border);background:var(--bg)}
+  .textarea{min-height:7rem;resize:vertical}
+  .button-row{display:flex;gap:.65rem;flex-wrap:wrap}
+  .btn{padding:.85rem 1rem;border-radius:.75rem;border:1px solid var(--border);background:var(--surface2);font-weight:600}
+  .btn.primary{background:var(--primary);border-color:var(--primary);color:white}
+  .btn.ghost{background:transparent}
+  .flight-list{display:grid;gap:.8rem}
+  .flight-card{border:1px solid var(--border);border-radius:1rem;background:var(--surface2);padding:.9rem;display:grid;gap:.8rem}
+  .flight-head{display:flex;justify-content:space-between;gap:.75rem;align-items:center;flex-wrap:wrap}
+  .flight-title{font-weight:700}
+  .flight-meta{font-size:.86rem;color:var(--muted)}
+  .small-cols{display:grid;gap:.7rem}
+  .time-blocks{display:grid;gap:.9rem}
+  .top-pair{display:grid;grid-template-columns:1.15fr .85fr;gap:.9rem;align-items:start}
+  .pair-stack{display:grid;gap:.9rem}
+  .timing-card{min-height:7rem;padding:.95rem;border-radius:var(--radius2);background:var(--primary);color:white;box-shadow:var(--shadow);display:grid;gap:.75rem;align-content:center}
+  .timing-card.is-recorded{background:var(--success)}
+  .timing-label{font-size:1rem;font-weight:700}
+  .time-adjust{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:.45rem}
+  .mini-btn{width:2.05rem;height:2.05rem;border-radius:.75rem;background:rgba(255,255,255,.18);color:white;font-weight:700;font-size:1.1rem;display:grid;place-items:center}
+  .time-btn,.time-input{width:100%;padding:.75rem .8rem;border-radius:.75rem;background:rgba(255,255,255,.14);color:white;text-align:center;font-size:1.12rem;font-weight:700;font-variant-numeric:tabular-nums}
+  .time-input{border:1px solid rgba(255,255,255,.28);padding:.62rem .7rem}
+  .time-input::-webkit-calendar-picker-indicator{filter:invert(1)}
+  .timing-help{font-size:.84rem;opacity:.9}
+  .flight-grid{display:grid;gap:1rem}
+  .flight-box{padding:1rem;border:1px solid var(--border);border-radius:1rem;background:var(--surface2);display:grid;gap:1rem}
+  .flight-actions{display:flex;gap:.6rem;flex-wrap:wrap}
+  .tag{display:inline-flex;align-items:center;padding:.32rem .6rem;border-radius:9999px;background:#dfe9e8;color:var(--primary);font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+  .footer{font-size:.88rem;color:var(--muted);text-align:center;padding-bottom:1rem}
+  @media(min-width:960px){
+    .layout{grid-template-columns:420px 1fr}
+    .small-cols{grid-template-columns:1fr 1fr}
+    .flight-list{grid-template-columns:1fr 1fr}
+    .flight-grid{grid-template-columns:1fr 1fr}
+  }
+  @media(min-width:1220px){
+    .flight-list{grid-template-columns:repeat(3,1fr)}
+    .flight-grid{grid-template-columns:repeat(2,1fr)}
+    .top-pair{grid-template-columns:1.1fr .9fr}
+  }
+  @media(max-width:520px){
+    .app{padding:.75rem}
+    .setup,.preview{padding:.85rem}
+    .timing-card{min-height:6.5rem}
+    .mini-btn{width:1.95rem;height:1.95rem}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 64 64" fill="none">
+        <rect x="8" y="8" width="48" height="48" rx="16" stroke="currentColor" stroke-width="4"></rect>
+        <path d="M32 18V32L41 38" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+        <circle cx="32" cy="32" r="3" fill="currentColor"></circle>
+      </svg>
+      <div>
+        <h1>Timings rotation</h1>
+        <p>Gestion multi-vols avec champs personnalisés par vol.</p>
+      </div>
+    </div>
+    <button class="theme-toggle" type="button" id="themeToggle" aria-label="Changer de thème">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </header>
+
+  <main class="layout">
+    <section class="panel setup">
+      <div class="section-title">
+        <div>
+          <h2>Vols</h2>
+          <p class="muted">Ajoute autant de vols que nécessaire, puis personnalise chaque fiche.</p>
+        </div>
+      </div>
+      <div class="fields">
+        <div class="button-row">
+          <button class="btn primary" type="button" id="addFlightBtn">Ajouter un vol</button>
+          <button class="btn ghost" type="button" id="exportBtn">Exporter tout</button>
+          <button class="btn ghost" type="button" id="resetBtn">Réinitialiser</button>
+        </div>
+      </div>
+      <div id="flightList" class="flight-list"></div>
+    </section>
+
+    <section class="panel preview">
+      <div class="section-title">
+        <div>
+          <span class="tag">Aperçu</span>
+          <h2>Bloc timings</h2>
+          <p class="muted">SIBT/AIBT en bloc gauche, SOBT/AOBT à droite, puis les autres timings du vol.</p>
+        </div>
+      </div>
+      <div id="previewArea" class="flight-grid"></div>
+    </section>
+  </main>
+
+  <p class="footer">Chaque vol peut avoir Immat, Compagnie, N°Vol, Type avion et Destination.</p>
+</div>
+
+<script>
+(() => {
+  const root = document.documentElement;
+  const themeToggle = document.getElementById('themeToggle');
+  let currentTheme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  root.setAttribute('data-theme', currentTheme);
+
+  const flightList = document.getElementById('flightList');
+  const previewArea = document.getElementById('previewArea');
+  const addFlightBtn = document.getElementById('addFlightBtn');
+  const exportBtn = document.getElementById('exportBtn');
+  const resetBtn = document.getElementById('resetBtn');
+
+  const baseLabels = [
+    'SIBT','AIBT','SOBT','AOBT','1er Débarqué','Dernier Débarqué',
+    '1er Embarqué','Dernier Embarqué','Arrivée Lift','Départ Lift',
+    'Arrivée Avitair','Départ Avitair','Remise LID','Fermeture Portes'
+  ];
+
+  let flights = [];
+
+  const pad = n => String(n).padStart(2, '0');
+  const nowTime = () => new Intl.DateTimeFormat('fr-FR', { hour: '2-digit', minute: '2-digit' }).format(new Date());
+  const shift = (time, delta) => {
+    if (!time || !/\\d{2}:\\d{2}/.test(time)) return time || '--:--';
+    const [h, m] = time.split(':').map(Number);
+    const t = ((h * 60 + m + delta) % 1440 + 1440) % 1440;
+    return `${pad(Math.floor(t / 60))}:${pad(t % 60)}`;
+  };
+
+  function makeFlight() {
+    return {
+      id: crypto.randomUUID(),
+      info: { immat: '', compagnie: '', numero: '', type: '', destination: '' },
+      times: { SIBT: '', AIBT: '', SOBT: '', AOBT: '' },
+      others: Object.fromEntries(baseLabels.filter(x => !['SIBT','AIBT','SOBT','AOBT'].includes(x)).map(x => [x, '']))
+    };
+  }
+
+  function updateSOBT(f) {
+    if (f.times.SIBT) f.times.SOBT = shift(f.times.SIBT, 25);
+  }
+
+  function makeTimingCard(label, value, opts = {}) {
+    const isManual = label === 'SIBT';
+    const isSOBT = label === 'SOBT';
+    const card = document.createElement('article');
+    card.className = `timing-card${value ? ' is-recorded' : ''}${opts.small ? ' small' : ''}`;
+
+    if (isManual) {
+      card.innerHTML = `
+        <div class="timing-label">${label}</div>
+        <div class="time-adjust">
+          <input class="time-input" type="time" value="${value || ''}" aria-label="${label}">
+        </div>
+        <div class="timing-help">Heure manuelle.</div>
+      `;
+      const input = card.querySelector('input');
+      input.addEventListener('input', e => opts.onChange(e.target.value));
+      return card;
+    }
+
+    card.innerHTML = `
+      <div class="timing-label">${label}</div>
+      <div class="time-adjust">
+        <button class="mini-btn minus" type="button">−</button>
+        <button class="time-btn" type="button">${value || '--:--'}</button>
+        <button class="mini-btn plus" type="button">+</button>
+      </div>
+      <div class="timing-help">${isSOBT ? 'SIBT + 25 min par défaut, modifiable.' : 'Appui central = heure actuelle.'}</div>
+    `;
+
+    const minus = card.querySelector('.minus');
+    const plus = card.querySelector('.plus');
+    const btn = card.querySelector('.time-btn');
+
+    btn.addEventListener('click', () => opts.onChange(nowTime()));
+    minus.addEventListener('click', () => { if (value) opts.onChange(shift(value, -1)); });
+    plus.addEventListener('click', () => { if (value) opts.onChange(shift(value, 1)); });
+
+    return card;
+  }
+
+  function renderPreview(f = flights[0]) {
+    previewArea.innerHTML = '';
+    if (!f) {
+      previewArea.innerHTML = '<div class="panel" style="padding:1rem">Ajoute un vol pour voir l’aperçu.</div>';
+      return;
+    }
+
+    updateSOBT(f);
+
+    const box = document.createElement('article');
+    box.className = 'flight-box';
+    box.innerHTML = `
+      <div class="flight-head">
+        <div>
+          <div class="flight-title">${[f.info.compagnie, f.info.numero].filter(Boolean).join(' • ') || 'Vol sans nom'}</div>
+          <div class="flight-meta">${[f.info.immat, f.info.type, f.info.destination].filter(Boolean).join(' • ') || 'Renseigne les champs à gauche'}</div>
+        </div>
+      </div>
+    `;
+
+    const top = document.createElement('div');
+    top.className = 'top-pair';
+
+    const left = document.createElement('div');
+    left.className = 'pair-stack';
+
+    const right = document.createElement('div');
+    right.className = 'pair-stack';
+
+    left.appendChild(makeTimingCard('SIBT', f.times.SIBT, {
+      small: true,
+      onChange: v => { f.times.SIBT = v; updateSOBT(f); renderPreview(f); }
+    }));
+    left.appendChild(makeTimingCard('AIBT', f.times.AIBT, {
+      small: true,
+      onChange: v => { f.times.AIBT = v; renderPreview(f); }
+    }));
+    right.appendChild(makeTimingCard('SOBT', f.times.SOBT, {
+      small: true,
+      onChange: v => { f.times.SOBT = v; renderPreview(f); }
+    }));
+    right.appendChild(makeTimingCard('AOBT', f.times.AOBT, {
+      small: true,
+      onChange: v => { f.times.AOBT = v; renderPreview(f); }
+    }));
+
+    top.append(left, right);
+    box.appendChild(top);
+
+    const grid = document.createElement('div');
+    grid.className = 'time-blocks';
+    baseLabels.filter(x => !['SIBT','AIBT','SOBT','AOBT'].includes(x)).forEach(label => {
+      grid.appendChild(makeTimingCard(label, f.others[label], {
+        onChange: v => { f.others[label] = v; renderPreview(f); }
+      }));
+    });
+    box.appendChild(grid);
+
+    previewArea.appendChild(box);
+  }
+
+  function renderFlights() {
+    flightList.innerHTML = '';
+    flights.forEach((f, idx) => {
+      const el = document.createElement('article');
+      el.className = 'flight-box';
+      el.innerHTML = `
+        <div class="flight-head">
+          <div>
+            <div class="flight-title">Vol ${idx + 1}</div>
+            <div class="flight-meta">${[f.info.compagnie, f.info.numero].filter(Boolean).join(' • ') || 'Informations non renseignées'}</div>
+          </div>
+          <div class="button-row">
+            <button class="btn ghost" type="button" data-remove="${f.id}">Supprimer</button>
+          </div>
+        </div>
+
+        <div class="small-cols">
+          <input class="input" data-field="immat" data-id="${f.id}" placeholder="Immat" value="${f.info.immat}">
+          <input class="input" data-field="compagnie" data-id="${f.id}" placeholder="Compagnie" value="${f.info.compagnie}">
+          <input class="input" data-field="numero" data-id="${f.id}" placeholder="N°Vol" value="${f.info.numero}">
+          <input class="input" data-field="type" data-id="${f.id}" placeholder="Type avion" value="${f.info.type}">
+          <input class="input" data-field="destination" data-id="${f.id}" placeholder="Destination" value="${f.info.destination}">
+        </div>
+
+        <div class="button-row">
+          <button class="btn primary" type="button" data-preview="${f.id}">Voir l’aperçu</button>
+        </div>
+      `;
+      flightList.appendChild(el);
+    });
+
+    document.querySelectorAll('[data-field]').forEach(inp => {
+      inp.addEventListener('input', e => {
+        const f = flights.find(x => x.id === e.target.dataset.id);
+        f.info[e.target.dataset.field] = e.target.value;
+      });
+    });
+
+    document.querySelectorAll('[data-remove]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        flights = flights.filter(x => x.id !== e.target.dataset.remove);
+        renderFlights();
+        renderPreview();
+      });
+    });
+
+    document.querySelectorAll('[data-preview]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        const f = flights.find(x => x.id === e.target.dataset.preview);
+        renderPreview(f);
+      });
+    });
+  }
+
+  function addFlight() {
+    flights.push(makeFlight());
+    renderFlights();
+    renderPreview(flights[flights.length - 1]);
+  }
+
+  function exportAll() {
+    const rows = [['Vol', 'Immat', 'Compagnie', 'N°Vol', 'Type avion', 'Destination', 'Timings']];
+    flights.forEach((f, i) => {
+      rows.push([
+        String(i + 1),
+        f.info.immat,
+        f.info.compagnie,
+        f.info.numero,
+        f.info.type,
+        f.info.destination,
+        JSON.stringify({ times: f.times, others: f.others })
+      ]);
+    });
+    const csv = rows.map(r => r.map(c => `"${String(c ?? '').replace(/"/g, '""')}"`).join(';')).join('\\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'vols-timings.csv';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  function resetAll() {
+    flights = [];
+    renderFlights();
+    renderPreview();
+  }
+
+  themeToggle.addEventListener('click', () => {
+    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', currentTheme);
+  });
+
+  addFlightBtn.addEventListener('click', addFlight);
+  exportBtn.addEventListener('click', exportAll);
+  resetBtn.addEventListener('click', resetAll);
+
+  addFlight();
+})();
+</script>
+</body>
+</html>
