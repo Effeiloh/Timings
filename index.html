@@ -513,9 +513,10 @@ button{cursor:pointer;border:none;background:none}
   window.addEventListener('beforeunload', saveFlights);
 
   // ─── Init ────────────────────────────────────────────────────────────────────
-  // Bloquer le zoom double-tap sur toute la page
+  // Bloquer le zoom double-tap sur toute la page sauf les boutons timing
   let lastTap = 0;
   document.addEventListener('touchend', e => {
+    if (e.target.closest('.time-btn, .mini-btn, .sibt-input, .sibt-reset')) return;
     const now = Date.now();
     if (now - lastTap < 300) e.preventDefault();
     lastTap = now;
