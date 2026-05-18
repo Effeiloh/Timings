@@ -333,8 +333,9 @@ button{cursor:pointer;border:none;background:none}
       }
     });
 
-    minus.addEventListener('click', () => { if (value) opts.onChange(shift(value, -1)); });
-    plus.addEventListener('click',  () => { if (value) opts.onChange(shift(value, +1)); });
+    const step = opts.step || 1;
+    minus.addEventListener('click', () => { if (value) { if (opts.onMinus) opts.onMinus(); else opts.onChange(shift(value, -step)); } });
+    plus.addEventListener('click',  () => { if (value) opts.onChange(shift(value, +step)); });
 
     return card;
   }
@@ -424,7 +425,25 @@ button{cursor:pointer;border:none;background:none}
     // ✅ FIX 3 : saveFlights() dans chaque onChange
     left.appendChild(makeTimingCard('SIBT', f.times.SIBT, { onChange: v => { f.times.SIBT = v; if (!v) f.times.SOBT = ''; else updateSOBT(f); saveFlights(); renderPreview(); } }));
     left.appendChild(makeTimingCard('AIBT', f.times.AIBT, { onChange: v => { f.times.AIBT = v; saveFlights(); renderPreview(); } }));
-    right.appendChild(makeTimingCard('SOBT', f.times.SOBT, { onChange: v => { f.times.SOBT = v; saveFlights(); renderPreview(); } }));
+    right.appendChild(makeTimingCard('SOBT', f.times.SOBT, {
+      step: 10,
+      onChange: v => { f.times.SOBT = v; saveFlights(); renderPreview(); },
+      onMinus: () => {
+        if (!f.times.SOBT) return;
+        const candidate = shift(f.times.SOBT, -10);
+        if (f.times.SIBT) {
+          // Convertir les deux en minutes pour comparer
+          const toMin = t => { const [h,m] = t.split(':').map(Number); return h*60+m; };
+          const sibtMin = toMin(f.times.SIBT);
+          let candMin = toMin(candidate);
+          // Gérer le passage minuit
+          let diff = candMin - sibtMin;
+          if (diff < 0) diff += 1440;
+          if (diff < 25) return; // bloquer
+        }
+        f.times.SOBT = candidate; saveFlights(); renderPreview();
+      }
+    }));
     right.appendChild(makeTimingCard('AOBT', f.times.AOBT, { onChange: v => { f.times.AOBT = v; saveFlights(); renderPreview(); } }));
     top.append(left, right);
     box.appendChild(top);
@@ -447,7 +466,7 @@ button{cursor:pointer;border:none;background:none}
     siTa.style.cssText = 'resize:vertical;width:100%;font-size:.88rem';
     siTa.placeholder = 'Special information…';
     siTa.value = f.si || '';
-    siTa.addEventListener('input', () => { f.si = siTa.value; saveFlights(); });
+    siTa.addEventListener('input', () => { const pos = siTa.selectionStart; siTa.value = siTa.value.toUpperCase(); siTa.selectionStart = siTa.selectionEnd = pos; f.si = siTa.value; saveFlights(); });
     siBlock.appendChild(siTa);
     box.appendChild(siBlock);
 
@@ -494,6 +513,14 @@ button{cursor:pointer;border:none;background:none}
   window.addEventListener('beforeunload', saveFlights);
 
   // ─── Init ────────────────────────────────────────────────────────────────────
+  // Bloquer le zoom double-tap sur toute la page
+  let lastTap = 0;
+  document.addEventListener('touchend', e => {
+    const now = Date.now();
+    if (now - lastTap < 300) e.preventDefault();
+    lastTap = now;
+  }, { passive: false });
+
   if (!loadFlights()) { const f = makeFlight(); flights.push(f); activeFlightId = f.id; renderAll(); }
   else renderAll();
 })();
