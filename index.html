@@ -74,7 +74,7 @@ button{cursor:pointer;border:none;background:none}
 .confirm-backdrop.open{display:flex}
 .confirm-box{width:min(420px,100%);background:var(--surface);border:1px solid var(--border);border-radius:1rem;box-shadow:var(--shadow);padding:1rem;display:grid;gap:.9rem}
 .confirm-actions{display:flex;justify-content:flex-end;gap:.6rem}
-.pax-fab{position:fixed;right:.85rem;bottom:.85rem;z-index:40;border-radius:999px;box-shadow:var(--shadow)}
+.pax-fab{position:fixed;right:.85rem;bottom:.85rem;z-index:40;border-radius:999px;box-shadow:var(--shadow)}.lid-fab{background:#34d399;border-color:#34d399;color:#022c22}.pax-fab-left{position:fixed;left:.85rem;bottom:.85rem;z-index:40;border-radius:999px;box-shadow:var(--shadow)}
 
 @media(min-width:960px){.layout{grid-template-columns:420px 1fr}.flight-list{grid-template-columns:1fr 1fr}.flight-grid{grid-template-columns:1fr 1fr}}
 @media(min-width:1220px){.flight-list{grid-template-columns:repeat(3,1fr)}.flight-grid{grid-template-columns:repeat(2,1fr)}}
@@ -90,7 +90,8 @@ button{cursor:pointer;border:none;background:none}
       <div id="flightList" class="flight-list"></div>
     </section>
     <section class="panel preview">
-      <div class="section-title" style="align-items:center"><div><h2 style="margin:0;font-size:1rem">Timings</h2></div><button class="btn primary pax-fab" type="button" id="openPaxBtn">LID</button></div>
+      <div class="section-title" style="align-items:center"><div><h2 style="margin:0;font-size:1rem">Timings</h2></div><button class="btn primary pax-fab lid-fab" type="button" id="openPaxBtn">LID</button>
+      <button class="btn primary pax-fab-left" type="button" id="openPaxForecastBtn" style="background:#34d399;border-color:#34d399;color:#022c22">PAX</button></div>
       <div id="previewArea" class="flight-grid"></div>
     </section>
   </main>
@@ -148,6 +149,43 @@ button{cursor:pointer;border:none;background:none}
   </div>
 </div>
 
+<div class="modal-backdrop" id="paxForecastBackdrop" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="paxForecastTitle">
+    <div class="modal-head">
+      <div><h3 id="paxForecastTitle" style="margin:0">PAX</h3><div class="xs" id="paxForecastSub">Prévisions</div></div>
+      <button class="btn ghost" id="closePaxForecastBtn" type="button" aria-label="Fermer">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;gap:.4rem;margin-bottom:.3rem">
+        <button class="tab-btn active" id="tabARR" type="button">ARR</button>
+        <button class="tab-btn" id="tabDPR" type="button">DPR</button>
+      </div>
+      <div id="panelARR">
+        <div class="grid3 pax-grid" style="margin-bottom:.5rem">
+          <div class="stack"><div class="label">PAX</div><input class="input" id="arrPax" type="number" min="0" step="1"></div>
+          <div class="stack"><div class="label">Infants</div><input class="input" id="arrInfants" type="number" min="0" step="1"></div>
+          <div class="stack"><div class="label">Bags</div><input class="input" id="arrBags" type="number" min="0" step="1"></div>
+        </div>
+        <div class="stack">
+          <div class="label">SI</div>
+          <textarea class="input" id="arrSI" rows="3" style="resize:vertical" placeholder="Special information…"></textarea>
+        </div>
+      </div>
+      <div id="panelDPR" style="display:none">
+        <div class="grid3 pax-grid" style="margin-bottom:.5rem">
+          <div class="stack"><div class="label">PAX</div><input class="input" id="dprPax" type="number" min="0" step="1"></div>
+          <div class="stack"><div class="label">Infants</div><input class="input" id="dprInfants" type="number" min="0" step="1"></div>
+          <div class="stack"><div class="label">Bags</div><input class="input" id="dprBags" type="number" min="0" step="1"></div>
+        </div>
+        <div class="stack">
+          <div class="label">SI</div>
+          <textarea class="input" id="dprSI" rows="3" style="resize:vertical" placeholder="Special information…"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 (() => {
   const root = document.documentElement;
@@ -200,7 +238,8 @@ button{cursor:pointer;border:none;background:none}
       others: Object.fromEntries(
         baseLabels.filter(x => !['SIBT','AIBT','SOBT','AOBT'].includes(x)).map(x => [x,''])
       ),
-      pax: { adults:0, childs:0, infants:0, oa:0, ob:0, oc:0, bags:0, gb:0 }
+      pax: { adults:0, childs:0, infants:0, oa:0, ob:0, oc:0, bags:0, gb:0 },
+      forecast: { arr: { pax:0, infants:0, bags:0, si:'' }, dpr: { pax:0, infants:0, bags:0, si:'' } }
     };
   }
 
@@ -537,6 +576,83 @@ button{cursor:pointer;border:none;background:none}
     renderFlights();
   });
 
+
+  // ─── PAX Forecast modal ──────────────────────────────────────────────────────
+  const paxForecastBackdrop = document.getElementById('paxForecastBackdrop');
+  const closePaxForecastBtn = document.getElementById('closePaxForecastBtn');
+  const openPaxForecastBtn  = document.getElementById('openPaxForecastBtn');
+  const tabARR = document.getElementById('tabARR');
+  const tabDPR = document.getElementById('tabDPR');
+  const panelARR = document.getElementById('panelARR');
+  const panelDPR = document.getElementById('panelDPR');
+
+  let activeForecastTab = 'arr';
+
+  function switchForecastTab(tab) {
+    activeForecastTab = tab;
+    tabARR.classList.toggle('active', tab === 'arr');
+    tabDPR.classList.toggle('active', tab === 'dpr');
+    panelARR.style.display = tab === 'arr' ? '' : 'none';
+    panelDPR.style.display = tab === 'dpr' ? '' : 'none';
+  }
+
+  function saveForecast() {
+    const f = getActiveFlight();
+    if (!f) return;
+    if (!f.forecast) f.forecast = { arr:{pax:0,infants:0,bags:0,si:''}, dpr:{pax:0,infants:0,bags:0,si:''} };
+    f.forecast.arr = { pax: num(document.getElementById('arrPax').value), infants: num(document.getElementById('arrInfants').value), bags: num(document.getElementById('arrBags').value), si: document.getElementById('arrSI').value };
+    f.forecast.dpr = { pax: num(document.getElementById('dprPax').value), infants: num(document.getElementById('dprInfants').value), bags: num(document.getElementById('dprBags').value), si: document.getElementById('dprSI').value };
+    saveFlights();
+  }
+
+  function openPaxForecast() {
+    const f = getActiveFlight();
+    if (!f) return;
+    if (!f.forecast) f.forecast = { arr:{pax:0,infants:0,bags:0,si:''}, dpr:{pax:0,infants:0,bags:0,si:''} };
+    document.getElementById('paxForecastSub').textContent = `${f.info.numero || '--'} • ${f.info.destination || '--'}`;
+    document.getElementById('arrPax').value     = f.forecast.arr.pax || '';
+    document.getElementById('arrInfants').value = f.forecast.arr.infants || '';
+    document.getElementById('arrBags').value    = f.forecast.arr.bags || '';
+    document.getElementById('arrSI').value      = f.forecast.arr.si || '';
+    document.getElementById('dprPax').value     = f.forecast.dpr.pax || '';
+    document.getElementById('dprInfants').value = f.forecast.dpr.infants || '';
+    document.getElementById('dprBags').value    = f.forecast.dpr.bags || '';
+    document.getElementById('dprSI').value      = f.forecast.dpr.si || '';
+    switchForecastTab('arr');
+    paxForecastBackdrop.classList.add('open');
+    paxForecastBackdrop.setAttribute('aria-hidden', 'false');
+  }
+
+  function closePaxForecast() {
+    saveForecast();
+    paxForecastBackdrop.classList.remove('open');
+    paxForecastBackdrop.setAttribute('aria-hidden', 'true');
+  }
+
+  openPaxForecastBtn.addEventListener('click', openPaxForecast);
+  openPaxForecastBtn.addEventListener('touchstart', e => { e.preventDefault(); openPaxForecast(); }, { passive: false });
+  closePaxForecastBtn.addEventListener('click', closePaxForecast);
+  tabARR.addEventListener('click', () => switchForecastTab('arr'));
+  tabDPR.addEventListener('click', () => switchForecastTab('dpr'));
+  paxForecastBackdrop.addEventListener('click', e => { if (e.target === paxForecastBackdrop) closePaxForecast(); });
+
+  // Majuscules SI + save en temps réel
+  ['arrSI','dprSI'].forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener('input', () => {
+      const pos = el.selectionStart;
+      el.value = el.value.toUpperCase();
+      el.selectionStart = el.selectionEnd = pos;
+      saveForecast();
+    });
+  });
+  ['arrPax','arrInfants','arrBags','dprPax','dprInfants','dprBags'].forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener('input',  () => saveForecast());
+    el.addEventListener('focus',  () => { if (el.value === '0') el.value = ''; });
+    el.addEventListener('blur',   () => { if (el.value === '') el.value = '0'; saveForecast(); });
+  });
+
   cancelConfirmBtn.addEventListener('click', () => confirmBackdrop.classList.remove('open'));
   acceptConfirmBtn.addEventListener('click', () => { confirmBackdrop.classList.remove('open'); flights = []; activeFlightId = null; renderAll(); });
 
@@ -553,7 +669,7 @@ button{cursor:pointer;border:none;background:none}
   });
 
   paxBackdrop.addEventListener('click', e => { if (e.target === paxBackdrop) closePax(); });
-  window.addEventListener('keydown', e => { if (e.key === 'Escape') closePax(); });
+  window.addEventListener('keydown', e => { if (e.key === 'Escape') { closePax(); closePaxForecast(); } });
   window.addEventListener('beforeunload', saveFlights);
 
   // ─── Init ────────────────────────────────────────────────────────────────────
