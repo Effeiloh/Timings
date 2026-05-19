@@ -116,9 +116,24 @@ button{cursor:pointer;border:none;background:none}
         <div></div>
       </div>
       <div class="grid3 pax-grid pax-midline">
-        <div class="stack"><div class="label">OA</div><input class="input" id="secOA" type="number" min="0" step="1"></div>
-        <div class="stack"><div class="label">OB</div><input class="input" id="secOB" type="number" min="0" step="1"></div>
-        <div class="stack"><div class="label">OC</div><input class="input" id="secOC" type="number" min="0" step="1"></div>
+        <div class="stack">
+          <div class="label" style="display:flex;justify-content:space-between;align-items:baseline">
+            <span>OA</span><span id="zoneOA-hint" style="font-size:.65rem;color:var(--muted);font-weight:400"></span>
+          </div>
+          <input class="input" id="secOA" type="number" min="0" step="1" style="color:var(--text)">
+        </div>
+        <div class="stack">
+          <div class="label" style="display:flex;justify-content:space-between;align-items:baseline">
+            <span>OB</span><span id="zoneOB-hint" style="font-size:.65rem;color:var(--muted);font-weight:400"></span>
+          </div>
+          <input class="input" id="secOB" type="number" min="0" step="1">
+        </div>
+        <div class="stack">
+          <div class="label" style="display:flex;justify-content:space-between;align-items:baseline">
+            <span>OC</span><span id="zoneOC-hint" style="font-size:.65rem;color:var(--muted);font-weight:400"></span>
+          </div>
+          <input class="input" id="secOC" type="number" min="0" step="1">
+        </div>
       </div>
       <div class="grid3 pax-grid pax-bottomline">
         <div class="stack"><div class="label">BAGS</div><input class="input" id="secBags" type="number" min="0" step="1"></div>
@@ -212,6 +227,12 @@ button{cursor:pointer;border:none;background:none}
   const num = v => { const n = parseInt(v, 10); return Number.isFinite(n) && n > 0 ? n : 0; };
 
   // ─── LID ────────────────────────────────────────────────────────────────────
+
+  const ZONE_CONFIG = {
+    B38M: { oa: { rows:'1-6',  max:32  }, ob: { rows:'7-29',  max:129 }, oc: { rows:'30-35', max:36  } },
+    B738: { oa: { rows:'1-5',  max:27  }, ob: { rows:'6-28',  max:132 }, oc: { rows:'29-33', max:30  } },
+    A320: { oa: { rows:'1-10', max:60  }, ob: { rows:'11-20', max:60  }, oc: { rows:'21-30', max:60  } },
+  };
   function openPax() {
     const f = getActiveFlight();
     if (!f) return;
@@ -225,6 +246,22 @@ button{cursor:pointer;border:none;background:none}
     secBags.value    = f.pax.bags    ?? '';
     secGB.value      = f.pax.gb      ?? '';
     const siDiv = document.getElementById('secSI'); siDiv.textContent = f.si || ''; siDiv.style.color = f.si ? 'var(--text)' : 'var(--muted)';
+    // Zones config selon type avion
+    const zc = ZONE_CONFIG[f.info.type] || null;
+    ['OA','OB','OC'].forEach(z => {
+      const key = z.toLowerCase();
+      const hint = document.getElementById('zone' + z + '-hint');
+      const inp  = document.getElementById('sec' + z);
+      if (zc && zc[key]) {
+        hint.textContent = zc[key].rows;
+        inp.placeholder  = 'max ' + zc[key].max;
+        inp.max          = zc[key].max;
+      } else {
+        hint.textContent = '';
+        inp.placeholder  = '';
+        inp.removeAttribute('max');
+      }
+    });
     computePaxUI();
     paxBackdrop.classList.add('open');
     paxBackdrop.setAttribute('aria-hidden', 'false');
@@ -240,10 +277,17 @@ button{cursor:pointer;border:none;background:none}
     const adults  = num(paxAdults.value), childs = num(paxChilds.value), infants = num(paxInfants.value);
     const oa = num(secOA.value), ob = num(secOB.value), oc = num(secOC.value);
     const tob = adults + childs;
-    const thob = adults + childs + infants;
     paxTob.textContent = `${tob}+${infants}`;
     const sec = oa + ob + oc;
     tobSummary.classList.toggle('warn-box', sec > tob);
+    // Colorer en rouge si dépassement du max de zone
+    const f = getActiveFlight();
+    const zc = f && ZONE_CONFIG[f.info.type] ? ZONE_CONFIG[f.info.type] : null;
+    [['secOA','oa'],['secOB','ob'],['secOC','oc']].forEach(([id, key]) => {
+      const inp = document.getElementById(id);
+      const over = zc && num(inp.value) > zc[key].max;
+      inp.style.color = over ? 'var(--danger)' : '';
+    });
   }
 
   function savePax() {
