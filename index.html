@@ -85,10 +85,11 @@ button{cursor:pointer;border:none;background:none}
 <div class="app">
   
   <main class="layout">
-    <section class="panel setup">
-      <div class="top-actions" style="width:100%"><button class="btn primary" type="button" id="addFlightBtn">+</button><div id="tabsHost" class="tabs" style="flex:1"></div><button class="btn ghost" type="button" id="collapseInfoBtn" title="Réduire les infos vol" style="font-size:.85rem;padding:.45rem .55rem;border:1px solid var(--border);border-radius:.75rem;flex-shrink:0">▲</button></div>
+    <section class="panel setup" id="setupPanel">
+      <div class="top-actions" style="width:100%"><button class="btn primary" type="button" id="addFlightBtn">+</button><div id="tabsHost" class="tabs" style="flex:1"></div></div>
       <div id="flightList" class="flight-list"></div>
     </section>
+    <button class="btn ghost" type="button" id="collapseInfoBtn" style="justify-self:start;font-size:.75rem;padding:.2rem .5rem;border:1px solid var(--border);border-radius:.6rem;color:var(--muted)">▲ vols</button>
     <section class="panel preview">
       <div class="section-title" style="align-items:center"><div><h2 style="margin:0;font-size:1rem">Timings</h2></div><button class="btn primary pax-fab lid-fab" type="button" id="openPaxBtn">LID</button>
       <button class="btn primary pax-fab-left" type="button" id="openPaxForecastBtn" style="background:#34d399;border-color:#34d399;color:#022c22">PAX</button></div>
@@ -570,10 +571,11 @@ button{cursor:pointer;border:none;background:none}
 
   let infoCollapsed = false;
   const collapseInfoBtn = document.getElementById('collapseInfoBtn');
+  const setupPanel = document.getElementById('setupPanel');
   collapseInfoBtn.addEventListener('click', () => {
     infoCollapsed = !infoCollapsed;
-    collapseInfoBtn.textContent = infoCollapsed ? '▼' : '▲';
-    renderFlights();
+    setupPanel.style.display = infoCollapsed ? 'none' : '';
+    collapseInfoBtn.textContent = infoCollapsed ? '▼ vols' : '▲ vols';
   });
 
 
