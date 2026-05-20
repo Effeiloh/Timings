@@ -89,7 +89,7 @@ button{cursor:pointer;border:none;background:none}
       <div class="top-actions" style="width:100%"><button class="btn primary" type="button" id="addFlightBtn">+</button><div id="tabsHost" class="tabs" style="flex:1"></div></div>
       <div id="flightList" class="flight-list"></div>
     </section>
-    <button class="btn ghost" type="button" id="collapseInfoBtn" style="justify-self:start;font-size:.75rem;padding:.2rem .5rem;border:1px solid var(--border);border-radius:.6rem;color:var(--muted)">▲ vols</button>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:.5rem"><button class="btn ghost" type="button" id="collapseInfoBtn" style="font-size:.75rem;padding:.2rem .5rem;border:1px solid var(--border);border-radius:.6rem;color:var(--muted)">▲ vols</button><button class="btn ghost" type="button" id="openTurnaroundBtn" style="font-size:.7rem;padding:.2rem .45rem;border:1px solid var(--border);border-radius:.6rem;color:var(--muted);opacity:.6">25min</button></div>
     <section class="panel preview">
       <div class="section-title" style="align-items:center"><div><h2 style="margin:0;font-size:1rem">Timings</h2></div><button class="btn primary pax-fab lid-fab" type="button" id="openPaxBtn">LID</button>
       <button class="btn primary pax-fab-left" type="button" id="openPaxForecastBtn" style="background:#34d399;border-color:#34d399;color:#022c22">PAX</button></div>
@@ -97,6 +97,13 @@ button{cursor:pointer;border:none;background:none}
     </section>
   </main>
 </div>
+<div id="pdfOverlay" style="display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.85);flex-direction:column">
+  <div style="display:flex;justify-content:flex-end;padding:.5rem .75rem">
+    <button id="closePdfBtn" type="button" style="background:#fff2;border:1px solid #fff4;color:#fff;border-radius:.6rem;padding:.35rem .8rem;font-size:.9rem;cursor:pointer">✕ Fermer</button>
+  </div>
+  <iframe id="pdfFrame" src="" style="flex:1;width:100%;border:none"></iframe>
+</div>
+
 <div class="confirm-backdrop" id="confirmBackdrop" aria-hidden="true"><div class="confirm-box"><div style="font-weight:700">Supprimer toutes les données ?</div><div class="xs">Cette action effacera tous les vols et leurs timings.</div><div class="confirm-actions"><button class="btn ghost" id="cancelConfirmBtn" type="button">Annuler</button><button class="btn primary" id="acceptConfirmBtn" type="button">Supprimer</button></div></div></div>
 
 <!-- ✅ FIX 1 : modal LID avec id="tobSummary" sur le bon élément -->
@@ -104,7 +111,7 @@ button{cursor:pointer;border:none;background:none}
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="paxTitle">
     <div class="modal-head">
       <div><h3 id="paxTitle" style="margin:0">LID</h3><div class="xs" id="paxSub">Vol actif</div></div>
-      <button class="btn ghost" id="closePaxBtn" type="button" aria-label="Fermer">✕</button>
+      <div style="display:flex;gap:.4rem;align-items:center"><button class="btn ghost" type="button" id="openLidGuideBtn" style="font-size:.75rem;padding:.3rem .6rem;border:1px solid var(--border);border-radius:.6rem;color:var(--muted)">Guide</button><button class="btn ghost" id="closePaxBtn" type="button" aria-label="Fermer">✕</button></div>
     </div>
     <div class="modal-body">
       <div class="grid3 pax-grid pax-topline">
@@ -189,6 +196,10 @@ button{cursor:pointer;border:none;background:none}
 
 <script>
 (() => {
+
+  const PDF_DELAY = 'https://raw.githubusercontent.com/Effeiloh/timings/main/gops-iata-delay-codes-apr24-rev17%20%2823%29.pdf';
+  const PDF_LID_GUIDE = 'https://raw.githubusercontent.com/Effeiloh/timings/main/lid-completion-guide%20%283%29.pdf';
+  const PDF_TURNAROUND = 'https://raw.githubusercontent.com/Effeiloh/timings/main/25-minute-turnaround-issue-19%20%282%29.pdf';
   const root = document.documentElement;
   let currentTheme = 'dark';
   root.setAttribute('data-theme', 'dark');
@@ -554,6 +565,18 @@ button{cursor:pointer;border:none;background:none}
     siBlock.appendChild(siTa);
     box.appendChild(siBlock);
 
+    // Bouton Delay
+    const delayRow = document.createElement('div');
+    delayRow.style.cssText = 'display:flex;justify-content:center;margin-top:.25rem';
+    const delayBtn = document.createElement('button');
+    delayBtn.className = 'btn ghost';
+    delayBtn.type = 'button';
+    delayBtn.textContent = 'Delay';
+    delayBtn.style.cssText = 'font-size:.8rem;padding:.3rem .8rem;color:var(--muted);border:1px solid var(--border);border-radius:.6rem';
+    delayBtn.addEventListener('click', () => openPdf(PDF_DELAY));
+    delayRow.appendChild(delayBtn);
+    box.appendChild(delayRow);
+
     const footer = document.createElement('div');
     footer.style.cssText = 'display:flex;justify-content:center;margin-top:.25rem';
     const closeAll = document.createElement('button');
@@ -655,10 +678,19 @@ button{cursor:pointer;border:none;background:none}
     el.addEventListener('blur',   () => { if (el.value === '') el.value = '0'; saveForecast(); });
   });
 
+
+  const pdfOverlay  = document.getElementById('pdfOverlay');
+  const pdfFrame    = document.getElementById('pdfFrame');
+  const closePdfBtn = document.getElementById('closePdfBtn');
+  function openPdf(src) { pdfFrame.src = src; pdfOverlay.style.display = 'flex'; }
+  function closePdf()   { pdfOverlay.style.display = 'none'; pdfFrame.src = ''; }
+  closePdfBtn.addEventListener('click', closePdf);
   cancelConfirmBtn.addEventListener('click', () => confirmBackdrop.classList.remove('open'));
   acceptConfirmBtn.addEventListener('click', () => { confirmBackdrop.classList.remove('open'); flights = []; activeFlightId = null; renderAll(); });
 
   // ✅ FIX 1 : les deux listeners pointent bien vers openPax/closePax qui utilisent tobSummary défini
+  document.getElementById('openLidGuideBtn').addEventListener('click', () => openPdf(PDF_LID_GUIDE));
+  document.getElementById('openTurnaroundBtn').addEventListener('click', () => openPdf(PDF_TURNAROUND));
   openPaxBtn.addEventListener('click', openPax);
   openPaxBtn.addEventListener('touchstart', e => { e.preventDefault(); openPax(); }, { passive: false });
   closePaxBtn.addEventListener('click', closePax);
