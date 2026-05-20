@@ -101,7 +101,7 @@ button{cursor:pointer;border:none;background:none}
   <div style="display:flex;justify-content:flex-end;padding:.5rem .75rem">
     <button id="closePdfBtn" type="button" style="background:#fff2;border:1px solid #fff4;color:#fff;border-radius:.6rem;padding:.35rem .8rem;font-size:.9rem;cursor:pointer">✕ Fermer</button>
   </div>
-  <iframe id="pdfFrame" src="" style="flex:1;width:100%;border:none"></iframe>
+  <div id="pdfFrame" style="flex:1;width:100%;overflow:auto;display:flex;align-items:flex-start;justify-content:center;background:#111"></div>
 </div>
 
 <div class="confirm-backdrop" id="confirmBackdrop" aria-hidden="true"><div class="confirm-box"><div style="font-weight:700">Supprimer toutes les données ?</div><div class="xs">Cette action effacera tous les vols et leurs timings.</div><div class="confirm-actions"><button class="btn ghost" id="cancelConfirmBtn" type="button">Annuler</button><button class="btn primary" id="acceptConfirmBtn" type="button">Supprimer</button></div></div></div>
@@ -197,9 +197,9 @@ button{cursor:pointer;border:none;background:none}
 <script>
 (() => {
 
-  const PDF_DELAY = 'https://raw.githubusercontent.com/Effeiloh/timings/main/gops-iata-delay-codes-apr24-rev17%20%2823%29.pdf';
-  const PDF_LID_GUIDE = 'https://raw.githubusercontent.com/Effeiloh/timings/main/lid-completion-guide%20%283%29.pdf';
-  const PDF_TURNAROUND = 'https://raw.githubusercontent.com/Effeiloh/timings/main/25-minute-turnaround-issue-19%20%282%29.pdf';
+  const PDF_DELAY = 'https://raw.githubusercontent.com/Effeiloh/timings/main/IMG_4379.jpeg';
+  const PDF_LID_GUIDE = 'https://raw.githubusercontent.com/Effeiloh/timings/main/IMG_4378.jpeg';
+  const PDF_TURNAROUND = 'https://raw.githubusercontent.com/Effeiloh/timings/main/IMG_4377.jpeg';
   const root = document.documentElement;
   let currentTheme = 'dark';
   root.setAttribute('data-theme', 'dark');
@@ -682,7 +682,14 @@ button{cursor:pointer;border:none;background:none}
   const pdfOverlay  = document.getElementById('pdfOverlay');
   const pdfFrame    = document.getElementById('pdfFrame');
   const closePdfBtn = document.getElementById('closePdfBtn');
-  function openPdf(src) { pdfFrame.src = src; pdfOverlay.style.display = 'flex'; }
+  function openPdf(src) {
+    pdfFrame.src = '';
+    pdfFrame.innerHTML = '';
+    // Afficher en image dans l'overlay
+    pdfFrame.style.cssText = 'flex:1;width:100%;overflow:auto;display:flex;align-items:flex-start;justify-content:center;background:#111';
+    pdfFrame.innerHTML = `<img src="${src}" style="max-width:100%;height:auto;display:block">`.replace('${src}', src);
+    pdfOverlay.style.display = 'flex';
+  }
   function closePdf()   { pdfOverlay.style.display = 'none'; pdfFrame.src = ''; }
   closePdfBtn.addEventListener('click', closePdf);
   cancelConfirmBtn.addEventListener('click', () => confirmBackdrop.classList.remove('open'));
